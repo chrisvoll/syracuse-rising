@@ -63,18 +63,23 @@ $(function() {
 
   ////////////////////////////////////////////
   //
-  // Money Charts
+  // Horizontal Bar Graphs
+  // Initial setup, no data yet
   //
   ////////////////////////////////////////////
 
   var margin = { top: 30, right: 0, bottom: 10, left: 5 },
       width  = $('#money').parent().width() - margin.left - margin.right,
       height = 300 - margin.top - margin.bottom;
+
   var x = d3.scale.linear()
       .range( [0, width] );
+
   var y = d3.scale.ordinal()
       .rangeRoundBands( [0, height], .2);
+
   var formatMillions = d3.format('.2s');
+
   var xAxis = d3.svg.axis()
       .scale(x)
       .ticks(5)
@@ -82,6 +87,7 @@ $(function() {
         return formatMillions(d).replace('M', 'm').replace('G', 'b').replace('.0', '');
       })
       .orient('top');
+
   var yAxis = d3.svg.axis()
       .scale(y)
       .orient('right');
@@ -91,22 +97,27 @@ $(function() {
       .attr( 'height', height + margin.top  + margin.bottom )
     .append('g')
       .attr( 'transform', 'translate(' + margin.left + ', ' + margin.top + ')' );
+
   var average = d3.select('#average').append('svg')
       .attr( 'width',  width  + margin.left + margin.right  )
       .attr( 'height', height + margin.top  + margin.bottom )
     .append('g')
       .attr( 'transform', 'translate(' + margin.left + ', ' + margin.top + ')' );
 
+  // Tooltips
   var moneyTip = d3.tip().attr( 'class', 'd3-tip' ).html( function(d) {
-    return '$' + formatMoney( d.total );
-  });
-  var averageTip = d3.tip().attr( 'class', 'd3-tip' ).html( function(d) {
-    return '$' + formatMoney( d.average );
-  })
+        return '$' + formatMoney( d.total );
+      }),
+      averageTip = d3.tip().attr( 'class', 'd3-tip' ).html( function(d) {
+        return '$' + formatMoney( d.average );
+      });
   money.call( moneyTip );
   average.call( averageTip );
 
-  var t = [];
+  // Create the data variables outside of the tabletop callback scope
+  // so we can use them when resizing the window
+  var d3Data    = [],
+      tableData = [];
 
 
   ////////////////////////////////////////////
@@ -115,86 +126,102 @@ $(function() {
   //
   ////////////////////////////////////////////
 
-  // Grab the data, plot the points
   Tabletop.init({
     key: '19JnF3xjfnGSLN0Gzoh-Gw2pNfbQVJYGq7XzZMYfMK-Q',
     callback: function(data, tabletop) {
 
-      // Format data for datatables
-      var table = [];
+
+      ////////////////////////////////////////////
+      //
+      // Format the data
+      //
+      ////////////////////////////////////////////
+
       for (i in data) {
         var point = data[i];
-        table.push([
-          point.name,
+
+        // Reformat for Datatables: [ [ a,b,c ], ... ]
+        tableData.push([
+          point.details ? '<a href="' + point.details + '">' + point.name + '</a>' : point.name,
           point.location.replace(', Syracuse, NY', ''),
           types[point.type].label,
           point.cost ? '$' + point.cost : ''
         ]);
-      }
 
-      $('.datatable').dataTable({
-        data: table,
-        columns: [
-          { title: 'Name' },
-          { title: 'Location' },
-          { title: 'Type' },
-          { title: 'Cost' }
-        ],
-        order: [[ 3, 'desc' ]],
-        paging: false,
-        searching: false
-      });
-
-      // Plot the points
-      for (i in data) {
-        var point = data[i];
+        // Plot the points on the map
         var marker = L.marker( [point.lat, point.lon], {
           icon: L.mapbox.marker.icon( types[point.type] )
         });
-        marker.bindPopup( '<strong>' + point.name + '</strong>, ' + types[point.type].label + ( point.cost ? ', $' + formatMoney(point.cost) : '' ) );
+        marker.bindPopup(
+          '<strong>' + point.name + '</strong>, ' +
+          types[point.type].label +
+          ( point.cost ? ', $' + formatMoney(point.cost) : '' )
+        );
         marker.addTo(map);
-
-        if (point.cost) {
+        if ( point.cost ) {
           types[point.type].total += +point.cost.replace(/,/g, '');
-
-          // only count the location if it has a cost
-          types[point.type].count++;
+          types[point.type].count ++;
         }
+        data[i].marker = marker;
       }
 
-      // Reformat the data in a way that D3 can understand
+      // Reformat Types for D3:
       for ( i in types ) {
-        t.push({
-          slug: i,
-          label: types[i].label,
-          total: types[i].total,
-          count: types[i].count,
-          average: Math.round( types[i].total / types[i].count ),
-          color: types[i]['marker-color']
+        d3Data.push({
+          slug    : i,
+          label   : types[i].label,
+          total   : types[i].total,
+          count   : types[i].count,
+          average : Math.round( types[i].total / types[i].count ),
+          color   : types[i]['marker-color']
         });
       }
 
-      t.sort( function(a, b) {
-        return b.total - a.total;
+      ////////////////////////////////////////////
+      //
+      // Data table
+      //
+      ////////////////////////////////////////////
+
+      $('.datatable').dataTable({
+        data: tableData,
+        columns   : [
+          { title : 'Name' },
+          { title : 'Location' },
+          { title : 'Type' },
+          { title : 'Cost' }
+        ],
+        order     : [[ 3, 'desc' ]],
+        paging    : false,
+        searching : false
       });
-      x.domain( [0, d3.max(t, function(d) { return d.total; })] )
-      y.domain( t.map( function(d) { return d.label; }) );
+
+
+      ////////////////////////////////////////////
+      //
+      // Money Breakdown Graph
+      //
+      ////////////////////////////////////////////
+
+      d3Data.sort( function(a, b) { return b.total - a.total; });
+      x.domain( [0, d3.max(d3Data, function(d) { return d.total; })] )
+      y.domain( d3Data.map( function(d) { return d.label; }) );
 
       money.selectAll( '.bar' )
-          .data( t )
+          .data( d3Data )
         .enter().append('rect')
           .attr( 'class', function(d) { return 'bar bar-' + d.slug; } )
           .attr( 'x', x(0) )
-          .attr( 'y', function(d) { return y(d.label); } )
+          .attr( 'y',     function(d) { return y( d.label ); } )
           .attr( 'width', function(d) { return x( d.total ); } )
           .attr( 'height', y.rangeBand() )
           .style( 'fill', function(d) { return d.color; } )
           .on( 'mouseover', function(d) {
-            moneyTip.show.call( this, d );
+            moneyTip.show(d);
             d3.select(this).transition(200).style( 'opacity', .7 );
           })
           .on( 'mouseout', function(d) {
-            moneyTip.hide.call( this, d );
+            moneyTip.hide(d);
             d3.select(this).transition(200).style( 'opacity', 1 );
           });
       money.append( 'g' )
@@ -206,29 +233,31 @@ $(function() {
 
 
 
-      // Average Cost Chart
+      ////////////////////////////////////////////
+      //
+      // Average Cost Graph
+      //
+      ////////////////////////////////////////////
 
-      t.sort( function(a, b) {
-        return b.average - a.average;
-      });
-      x.domain( [0, d3.max(t, function(d) { return d.average; })] );
-      y.domain( t.map( function(d) { return d.label; }) );
+      d3Data.sort( function(a, b) { return b.average - a.average; });
+      x.domain( [0, d3.max(d3Data, function(d) { return d.average; })] );
+      y.domain( d3Data.map( function(d) { return d.label; }) );
 
       average.selectAll( '.bar' )
-          .data( t )
+          .data( d3Data )
         .enter().append('rect')
           .attr( 'class', function(d) { return 'bar bar-' + d.slug; } )
           .attr( 'x', x(0) )
-          .attr( 'y', function(d) { return y(d.label); } )
+          .attr( 'y',     function(d) { return y( d.label   ); } )
           .attr( 'width', function(d) { return x( d.average ); } )
           .attr( 'height', y.rangeBand() )
           .style( 'fill', function(d) { return d.color; } )
           .on( 'mouseover', function(d) {
-            averageTip.show.call( this, d );
+            averageTip.show(d);
             d3.select(this).transition(200).style( 'opacity', .7 );
           })
           .on( 'mouseout', function(d) {
-            averageTip.hide.call( this, d );
+            averageTip.hide(d);
             d3.select(this).transition(200).style( 'opacity', 1 );
           });
       average.append( 'g' )
@@ -242,9 +271,26 @@ $(function() {
     simpleSheet: true
   });
 
+  ////////////////////////////////////////////
+  //
+  // Format Money
+  // Adds thousands commas (via stackoverflow)
+  // 10000000 --> 10,000,000
+  //
+  ////////////////////////////////////////////
+
   function formatMoney(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
+
+
+  ////////////////////////////////////////////
+  //
+  // Resize Charts
+  // Makes charts responsive, resizing on
+  // window resize
+  //
+  ////////////////////////////////////////////
 
   function resizeCharts() {
     width = $('#money').parent().width() - margin.left - margin.right;
@@ -253,7 +299,7 @@ $(function() {
     d3.select( money.node().parentNode )
       .style( 'width', ( width + margin.left + margin.right) + 'px' );
 
-    x.domain( [0, d3.max(t, function(d) { return d.total; })] );
+    x.domain( [0, d3.max(d3Data, function(d) { return d.total; })] );
     money.selectAll( '.bar' )
       .attr( 'width', function(d) { return x( d.total ) });
     money.select('.x.axis')
@@ -263,7 +309,7 @@ $(function() {
     d3.select( average.node().parentNode )
       .style( 'width', ( width + margin.left + margin.right ) + 'px' );
 
-    x.domain( [0, d3.max(t, function(d) { return d.average; })] );
+    x.domain( [0, d3.max(d3Data, function(d) { return d.average; })] );
     average.selectAll( '.bar' )
       .attr( 'width', function(d) { return x( d.average ) });
     average.select('.x.axis')
@@ -272,26 +318,14 @@ $(function() {
 
   $(window).on('resize', resizeCharts);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 });
 
 
-
-
-
-
+////////////////////////////////////////////
+//
+// National Poverty Map
+//
+////////////////////////////////////////////
 
 $(function() {
   // Setup how you want it to look
