@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Syracuse Rising</title>
+
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0">
+
+    <script src="//use.typekit.net/tmh8mxl.js"></script>
+    <script>try{Typekit.load();}catch(e){}</script>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/d3/d3.min.js"></script>
+    <script src="bower_components/d3-tip/index.js"></script>
+    <script src="bower_components/topojson/topojson.js"></script>
+    <script src="bower_components/tabletop/src/tabletop.js"></script>
+    <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="vendor/js/dropcap.js"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+    <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js'></script>
+    <script src="script.js"></script>
+
+    <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css">
+    <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+
+    <h1 class="h1">Syracuse Rising</h1>
+    <h2 class="h2">An influx of city-dwellers revitalizes downtowns across America</h2>
+
+    <p class="byline">By <span>Chris Voll</span></p>
+
+    <div class="text-block">
+      <p><span class="dropcap">O</span><span class="lede">ver the past</span> five years, the oft-repeated narrative of the struggling rust belt city center has eroded away. Stories of vacant buildings, rising crime, and gritty perseverance have been replaced by those of gentrification, investment, and prosperity. Syracuse, once a city afraid of change, has begun to embrace luxury apartments, coffee shops, and other symbols of progressive reinvention that have characterized the growth of other more liveable cities.</p>
+
+      <p>According to a Syracuse.com article on the trend, "Downtown's population has increased 47 percent in the last decade and 21 percent in the last three years alone." Since 2012, more than 900 new housing units downtown have been constructed or are currently being planned.</p>
+
+      <p>The Syracuse Downtown Committee in 2014 released a report outlining nearly $2.6 billion of capital that has recently been or soon will be invested in Syracuse-area construction projects. These new developments, centered around University Hill, Armory Square, the Inner Harbor, and Loguen Crossing, reflect greater demand for housing within the city.</p>
+    </div>
+
+    <!-- Syracuse Developments Map -->
+    <h3 class="h3">New Development Projects in Syracuse</h3>
+    <div id="map"></div>
+
+
+    <!-- Syracuse Developments Money Flow -->
+    <div class="text-block">
+      <h3 class="h3">Where is the $2.6 billion going?</h3>
+
+      <p>Interestingly, despite the large housing boom in downtown Syracuse, only a small share of the total amount invested has been in residential properties. However, it is important to note that large projects like Destiny USA ($540 million), Inner Harbor ($350 million) and Loguen Crossing ($340 million) skew these numbers.
+
+      <div id="money"></div>
+
+      <h3 class="h3">Which projects have the highest average cost?</h3>
+
+      <div id="average"></div>
+    </div>
+
+
+    <div class="text-block">
+
+      <h3 class="h3">How does Syracuse compare?</h3>
+
+      <p>While capital investments are difficult to compare amongst different regions, the economic stability of Syracuse can be viewed through the proxy of its poverty levels. Compared to most of the Northeast and Midwest, Onondaga's poverty level of 9.6% is is about average, if not slightly high.</p>
+
+    </div>
+
+    <div id="national"></div>
+
+    <div class="text-block">
+
+      <p><em>Source: U.S. Census Bureau, 2012 5-year estimates, American Community Survey</em></p>
+
+    </div>
+
+
+    <div class="text-block">
+
+      <h3 class="h3">Data</h3>
+
+      <p><em>Source: <a href="http://issuu.com/downtownsyracuse/docs/downtown_syracuse_development_overv">Downtown Syracuse Committee</a>. Addresses are from Google Maps and Syracuse.com articles for geocoding purposes.</em></p>
+
+      <table class="datatable" cellpadding="0" cellspacing="0" border="0"></table>
+
+    </div>
+
+
+
+  </body>
+</html>
