@@ -79,6 +79,9 @@ $(function() {
   var y = d3.scale.ordinal()
       .rangeRoundBands( [0, height], .2);
 
+  var tall_y = d3.scale.ordinal()
+      .rangeRoundBands( [0, height * 2], .2);
+
   var formatMillions = d3.format('.2s');
 
   var xAxis = d3.svg.axis()
@@ -91,6 +94,10 @@ $(function() {
 
   var yAxis = d3.svg.axis()
       .scale(y)
+      .orient('right');
+
+  var tall_yAxis = d3.svg.axis()
+      .scale(tall_y)
       .orient('right');
 
   // Money chart
@@ -107,7 +114,7 @@ $(function() {
               .attr( 'transform', 'translate(' + margin.left + ', ' + margin.top + ')' ),
     neighborhoods: d3.select('#neighborhoods').append('svg')
               .attr( 'width',  width  + margin.left + margin.right  )
-              .attr( 'height', height + margin.top  + margin.bottom )
+              .attr( 'height', height * 2 + margin.top  + margin.bottom )
             .append('g')
               .attr( 'transform', 'translate(' + margin.left + ', ' + margin.top + ')' )
   };
@@ -320,17 +327,16 @@ $(function() {
 
       neighborhoodsSorted.sort( function(a, b) { return b.total - a.total; });
       x.domain( [0, d3.max(neighborhoodsSorted, function(d) { return d.total; })] );
-      y.domain( neighborhoodsSorted.map( function(d) { return d.name; }) );
+      tall_y.domain( neighborhoodsSorted.map( function(d) { return d.name; }) );
 
       charts.neighborhoods.selectAll( '.bar' )
           .data( neighborhoodsSorted )
         .enter().append('rect')
           .attr( 'class', function(d) { return 'bar bar-neighborhood'; } )
           .attr( 'x', x(0) )
-          .attr( 'y',     function(d) { return y( d.name ); } )
+          .attr( 'y',     function(d) { return tall_y( d.name ); } )
           .attr( 'width', function(d) { return x( d.total ); } )
-          .attr( 'height', y.rangeBand() )
-          //.style( 'fill', function(d) { return d.color; } )
+          .attr( 'height', tall_y.rangeBand() )
           .on( 'mouseover', function(d) {
             tips.neighborhoods.show(d);
             d3.select(this).transition(200).style( 'opacity', .7 );
@@ -344,7 +350,7 @@ $(function() {
           .call( xAxis );
       charts.neighborhoods.append( 'g' )
           .attr( 'class', 'y axis' )
-          .call( yAxis );
+          .call( tall_yAxis );
       
     }
   });
@@ -404,7 +410,7 @@ $(function() {
       .call( xAxis );
   }
 
-  $(window).on('resize', resizeCharts);
+  $(window).on('resize', $.throttle( 250, resizeCharts ) );
 
 });
 
@@ -462,11 +468,13 @@ $(function() {
     })
     .await( ready );
 
+  var counties, states;
+
   function ready( error, us ) {
     if ( error ) return console.log( error );
 
     // Counties
-    svg.append( 'g' )
+    counties = svg.append( 'g' )
       .attr( 'class', 'counties' )
       .selectAll( 'path' )
 
@@ -495,7 +503,7 @@ $(function() {
         });
 
     // State borders
-    svg.append( 'path' )
+    states = svg.append( 'path' )
       .datum( topojson.mesh( us, us.objects.states, function( a, b ) {
         return a !== b;
       }))
@@ -504,4 +512,37 @@ $(function() {
   }
 
   d3.select( self.frameElement ).style( 'height', height + 'px' );
+
+  // Responsive map
+  var old_height = height;
+  $(window).on('resize', $.throttle( 250, function() {
+
+    width  = $('#national').width();
+    height = width / 1.6;
+    if ( height == old_height ) return;
+    projection
+      .scale( width * 1.33 )
+      .translate( [width / 2, height / 2] );
+    path
+      .projection( projection );
+    svg
+      .attr( 'width',  width  )
+      .attr( 'height', height );
+    counties
+      .attr( 'd', path );
+    states
+      .attr( 'd', path );
+  } ));
 });
+
+
+/*
+ * jQuery throttle / debounce - v1.1 - 3/7/2010
+ * http://benalman.com/projects/jquery-throttle-debounce-plugin/
+ * 
+ * Copyright (c) 2010 "Cowboy" Ben Alman
+ * Dual licensed under the MIT and GPL licenses.
+ * http://benalman.com/about/license/
+ */
+(function(b,c){var $=b.jQuery||b.Cowboy||(b.Cowboy={}),a;$.throttle=a=function(e,f,j,i){var h,d=0;if(typeof f!=="boolean"){i=j;j=f;f=c}function g(){var o=this,m=+new Date()-d,n=arguments;function l(){d=+new Date();j.apply(o,n)}function k(){h=c}if(i&&!h){l()}h&&clearTimeout(h);if(i===c&&m>e){l()}else{if(f!==true){h=setTimeout(i?k:l,i===c?e-m:e)}}}if($.guid){g.guid=j.guid=j.guid||$.guid++}return g};$.debounce=function(d,e,f){return f===c?a(d,e,false):a(d,f,e!==false)}})(this);
+
