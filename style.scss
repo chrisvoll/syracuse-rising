@@ -139,7 +139,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
 ////////////////////////////////////////////
 
   .bar {
-    fill: #CCC;
+    fill: #DDD;
   }
   .axis text {
     font: 10px sans-serif;
@@ -153,6 +153,9 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
     font-weight: bold;
     font-size: 12px;
     pointer-events: none;
+  }
+  #neighborhoods .axis.y text {
+    fill: #000;
   }
 
   .d3-tip {

@@ -22,6 +22,7 @@ $(function() {
     maxZoom: 18
   }).addTo(map);
 
+
   var types = {
     commercial: {
       'marker-color': '#9c89cc',
@@ -92,32 +93,47 @@ $(function() {
       .scale(y)
       .orient('right');
 
-  var money = d3.select('#money').append('svg')
-      .attr( 'width',  width  + margin.left + margin.right  )
-      .attr( 'height', height + margin.top  + margin.bottom )
-    .append('g')
-      .attr( 'transform', 'translate(' + margin.left + ', ' + margin.top + ')' );
+  // Money chart
+  var charts = {
+    money: d3.select('#money').append('svg')
+              .attr( 'width',  width  + margin.left + margin.right  )
+              .attr( 'height', height + margin.top  + margin.bottom )
+            .append('g')
+              .attr( 'transform', 'translate(' + margin.left + ', ' + margin.top + ')' ),
+    average: d3.select('#average').append('svg')
+              .attr( 'width',  width  + margin.left + margin.right  )
+              .attr( 'height', height + margin.top  + margin.bottom )
+            .append('g')
+              .attr( 'transform', 'translate(' + margin.left + ', ' + margin.top + ')' ),
+    neighborhoods: d3.select('#neighborhoods').append('svg')
+              .attr( 'width',  width  + margin.left + margin.right  )
+              .attr( 'height', height + margin.top  + margin.bottom )
+            .append('g')
+              .attr( 'transform', 'translate(' + margin.left + ', ' + margin.top + ')' )
+  };
 
-  var average = d3.select('#average').append('svg')
-      .attr( 'width',  width  + margin.left + margin.right  )
-      .attr( 'height', height + margin.top  + margin.bottom )
-    .append('g')
-      .attr( 'transform', 'translate(' + margin.left + ', ' + margin.top + ')' );
+  var tips = {
+    money: d3.tip().attr( 'class', 'd3-tip' ).html( function(d) {
+              return '$' + formatMoney( d.total );
+            }),
+    average: d3.tip().attr( 'class', 'd3-tip' ).html( function(d) {
+              return '$' + formatMoney( d.average );
+            }),
+    neighborhoods: d3.tip().attr( 'class', 'd3-tip' ).html( function(d) {
+              return '$' + formatMoney( d.total );
+            })
+  };
 
-  // Tooltips
-  var moneyTip = d3.tip().attr( 'class', 'd3-tip' ).html( function(d) {
-        return '$' + formatMoney( d.total );
-      }),
-      averageTip = d3.tip().attr( 'class', 'd3-tip' ).html( function(d) {
-        return '$' + formatMoney( d.average );
-      });
-  money.call( moneyTip );
-  average.call( averageTip );
+  charts.money.call( tips.money );
+  charts.average.call( tips.average );
+  charts.neighborhoods.call( tips.neighborhoods );
 
   // Create the data variables outside of the tabletop callback scope
   // so we can use them when resizing the window
   var d3Data    = [],
-      tableData = [];
+      tableData = [],
+      neighborhoodsData = {},
+      neighborhoodsSorted = [];
 
 
   ////////////////////////////////////////////
@@ -129,6 +145,7 @@ $(function() {
   Tabletop.init({
     key: '19JnF3xjfnGSLN0Gzoh-Gw2pNfbQVJYGq7XzZMYfMK-Q',
     callback: function(data, tabletop) {
+      data = data.Syracuse.elements;
 
 
       ////////////////////////////////////////////
@@ -159,8 +176,21 @@ $(function() {
         );
         marker.addTo(map);
         if ( point.cost ) {
+
+          // Types
           types[point.type].total += +point.cost.replace(/,/g, '');
           types[point.type].count ++;
+
+          // Neighborhoods
+          if ( !neighborhoodsData[point.neighborhood] ) {
+            neighborhoodsData[point.neighborhood] = {
+              name: point.neighborhood,
+              total: 0,
+              count: 0
+            };
+          }
+          neighborhoodsData[point.neighborhood].total += +point.cost.replace(/,/g, '');
+          neighborhoodsData[point.neighborhood].count ++;
         }
         data[i].marker = marker;
       }
@@ -175,6 +205,11 @@ $(function() {
           average : Math.round( types[i].total / types[i].count ),
           color   : types[i]['marker-color']
         });
+      }
+
+      // Reformat Neighborhoods for D3:
+      for ( i in neighborhoodsData ) {
+        neighborhoodsSorted.push( neighborhoodsData[i] );
       }
 
       ////////////////////////////////////////////
@@ -207,7 +242,7 @@ $(function() {
       x.domain( [0, d3.max(d3Data, function(d) { return d.total; })] )
       y.domain( d3Data.map( function(d) { return d.label; }) );
 
-      money.selectAll( '.bar' )
+      charts.money.selectAll( '.bar' )
           .data( d3Data )
         .enter().append('rect')
           .attr( 'class', function(d) { return 'bar bar-' + d.slug; } )
@@ -217,17 +252,17 @@ $(function() {
           .attr( 'height', y.rangeBand() )
           .style( 'fill', function(d) { return d.color; } )
           .on( 'mouseover', function(d) {
-            moneyTip.show(d);
+            tips.money.show(d);
             d3.select(this).transition(200).style( 'opacity', .7 );
           })
           .on( 'mouseout', function(d) {
-            moneyTip.hide(d);
+            tips.money.hide(d);
             d3.select(this).transition(200).style( 'opacity', 1 );
           });
-      money.append( 'g' )
+      charts.money.append( 'g' )
           .attr( 'class', 'x axis' )
           .call( xAxis );
-      money.append( 'g' )
+      charts.money.append( 'g' )
           .attr( 'class', 'y axis' )
           .call( yAxis );
 
@@ -243,7 +278,7 @@ $(function() {
       x.domain( [0, d3.max(d3Data, function(d) { return d.average; })] );
       y.domain( d3Data.map( function(d) { return d.label; }) );
 
-      average.selectAll( '.bar' )
+      charts.average.selectAll( '.bar' )
           .data( d3Data )
         .enter().append('rect')
           .attr( 'class', function(d) { return 'bar bar-' + d.slug; } )
@@ -253,22 +288,56 @@ $(function() {
           .attr( 'height', y.rangeBand() )
           .style( 'fill', function(d) { return d.color; } )
           .on( 'mouseover', function(d) {
-            averageTip.show(d);
+            tips.average.show(d);
             d3.select(this).transition(200).style( 'opacity', .7 );
           })
           .on( 'mouseout', function(d) {
-            averageTip.hide(d);
+            tips.average.hide(d);
             d3.select(this).transition(200).style( 'opacity', 1 );
           });
-      average.append( 'g' )
+      charts.average.append( 'g' )
           .attr( 'class', 'x axis' )
           .call( xAxis );
-      average.append( 'g' )
+      charts.average.append( 'g' )
+          .attr( 'class', 'y axis' )
+          .call( yAxis );
+
+
+      ////////////////////////////////////////////
+      //
+      // Neighborhoods Graph
+      //
+      ////////////////////////////////////////////
+
+      neighborhoodsSorted.sort( function(a, b) { return b.total - a.total; });
+      x.domain( [0, d3.max(neighborhoodsSorted, function(d) { return d.total; })] );
+      y.domain( neighborhoodsSorted.map( function(d) { return d.name; }) );
+
+      charts.neighborhoods.selectAll( '.bar' )
+          .data( neighborhoodsSorted )
+        .enter().append('rect')
+          .attr( 'class', function(d) { return 'bar bar-neighborhood'; } )
+          .attr( 'x', x(0) )
+          .attr( 'y',     function(d) { return y( d.name ); } )
+          .attr( 'width', function(d) { return x( d.total ); } )
+          .attr( 'height', y.rangeBand() )
+          //.style( 'fill', function(d) { return d.color; } )
+          .on( 'mouseover', function(d) {
+            tips.neighborhoods.show(d);
+            d3.select(this).transition(200).style( 'opacity', .7 );
+          })
+          .on( 'mouseout', function(d) {
+            tips.neighborhoods.hide(d);
+            d3.select(this).transition(200).style( 'opacity', 1 );
+          });
+      charts.neighborhoods.append( 'g' )
+          .attr( 'class', 'x axis' )
+          .call( xAxis );
+      charts.neighborhoods.append( 'g' )
           .attr( 'class', 'y axis' )
           .call( yAxis );
       
-    },
-    simpleSheet: true
+    }
   });
 
   ////////////////////////////////////////////
@@ -296,23 +365,23 @@ $(function() {
     width = $('#money').parent().width() - margin.left - margin.right;
     x.range( [0, width] );
 
-    d3.select( money.node().parentNode )
+    d3.select( charts.money.node().parentNode )
       .style( 'width', ( width + margin.left + margin.right) + 'px' );
 
     x.domain( [0, d3.max(d3Data, function(d) { return d.total; })] );
-    money.selectAll( '.bar' )
+    charts.money.selectAll( '.bar' )
       .attr( 'width', function(d) { return x( d.total ) });
-    money.select('.x.axis')
+    charts.money.select('.x.axis')
       .call( xAxis );
 
 
-    d3.select( average.node().parentNode )
+    d3.select( charts.average.node().parentNode )
       .style( 'width', ( width + margin.left + margin.right ) + 'px' );
 
     x.domain( [0, d3.max(d3Data, function(d) { return d.average; })] );
-    average.selectAll( '.bar' )
+    charts.average.selectAll( '.bar' )
       .attr( 'width', function(d) { return x( d.average ) });
-    average.select('.x.axis')
+    charts.average.select('.x.axis')
       .call( xAxis );
   }
 

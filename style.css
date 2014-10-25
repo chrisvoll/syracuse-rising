@@ -220,7 +220,7 @@ body {
   #map {
     height: 400px; } }
 .bar {
-  fill: #CCC; }
+  fill: #DDD; }
 
 .axis text {
   font: 10px sans-serif; }
@@ -234,6 +234,9 @@ body {
   font-weight: bold;
   font-size: 12px;
   pointer-events: none; }
+
+#neighborhoods .axis.y text {
+  fill: #000; }
 
 .d3-tip {
   line-height: 1;
