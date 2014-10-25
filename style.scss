@@ -125,6 +125,25 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
     height: 80vh;
   }
 
+  .point-name {
+    font-size: 14px !important;
+    margin: -3px 0 5px !important;
+  }
+
+  .point-meta {
+    margin: 7px 0 -5px;
+  }
+
+  .point-type {
+    display: inline-block;
+    color: #FFF;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 10px;
+    padding: 0 8px;
+    border-radius: 2px;
+  }
+
   @media (max-width: 460px) {
     #map {
       height: 400px;

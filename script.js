@@ -169,11 +169,20 @@ $(function() {
         var marker = L.marker( [point.lat, point.lon], {
           icon: L.mapbox.marker.icon( types[point.type] )
         });
-        marker.bindPopup(
-          '<strong>' + point.name + '</strong>, ' +
-          types[point.type].label +
-          ( point.cost ? ', $' + formatMoney(point.cost) : '' )
-        );
+        marker.bindPopup([
+          '<h4 class="point-name">',
+            point.details
+              ? '<a href="' + point.details + '" target="_blank">' + point.name + '</a>'
+              : point.name,
+          '</h4>',
+          point.description ? '<div class="point-description">' + point.description + '</div>' : '',
+          '<div class="point-meta">',
+            '<span class="point-type" style="background-color: ' + types[point.type]['marker-color'] + ';">',
+              types[point.type].label,
+            '</span>',
+            ( point.cost ? ' &nbsp; $' + formatMoney(point.cost) : '' ),
+          '</div>'
+        ].join(""));
         marker.addTo(map);
         if ( point.cost ) {
 
