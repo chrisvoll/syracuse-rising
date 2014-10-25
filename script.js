@@ -392,6 +392,16 @@ $(function() {
       .attr( 'width', function(d) { return x( d.average ) });
     charts.average.select('.x.axis')
       .call( xAxis );
+
+
+    d3.select( charts.neighborhoods.node().parentNode )
+      .style( 'width', ( width + margin.left + margin.right ) + 'px' );
+
+    x.domain( [0, d3.max(neighborhoodsSorted, function(d) { return d.total; })] );
+    charts.neighborhoods.selectAll( '.bar' )
+      .attr( 'width', function(d) { return x( d.total ) });
+    charts.neighborhoods.select('.x.axis')
+      .call( xAxis );
   }
 
   $(window).on('resize', resizeCharts);
