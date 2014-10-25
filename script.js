@@ -330,7 +330,9 @@ $(function() {
 $(function() {
   // Setup how you want it to look
   var width = $('#national').width(),
-      height = 600;
+      height = width / 1.6;
+
+  //$('#national').height( width * 1.6 );
 
   // Helpers for coloring the individual counties
   var rateById = d3.map();
