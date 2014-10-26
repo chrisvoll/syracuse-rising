@@ -120,7 +120,7 @@ $(function() {
             .append('g')
               .attr( 'transform', 'translate(' + margin.left + ', ' + margin.top + ')' ),
     neighborhoods: d3.select('#neighborhoods').append('svg')
-              .attr( 'width',  width  + margin.left + margin.right  )
+              .attr( 'width',  width      + margin.left + margin.right  )
               .attr( 'height', height * 2 + margin.top  + margin.bottom )
             .append('g')
               .attr( 'transform', 'translate(' + margin.left + ', ' + margin.top + ')' )
@@ -131,7 +131,7 @@ $(function() {
               return '$' + formatMoney( d.total );
             }),
     average: d3.tip().attr( 'class', 'd3-tip' ).html( function(d) {
-              return '$' + formatMoney( d.average );
+              return '$' + formatMoney( d.average ) + ' - ' + d.count + ' projects';
             }),
     neighborhoods: d3.tip().attr( 'class', 'd3-tip' ).html( function(d) {
               return '$' + formatMoney( d.total );
@@ -234,6 +234,7 @@ $(function() {
       for ( i in neighborhoodsData ) {
         neighborhoodsSorted.push( neighborhoodsData[i] );
       }
+
 
       ////////////////////////////////////////////
       //
@@ -521,12 +522,11 @@ $(function() {
   d3.select( self.frameElement ).style( 'height', height + 'px' );
 
   // Responsive map
-  var old_height = height;
   $(window).on('resize', $.throttle( 250, function() {
 
     width  = $('#national').width();
     height = width / 1.6;
-    if ( height == old_height ) return;
+
     projection
       .scale( width * 1.33 )
       .translate( [width / 2, height / 2] );
