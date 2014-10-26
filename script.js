@@ -58,6 +58,13 @@ $(function() {
       label: 'Academic',
       total: 0,
       count: 0
+    },
+    healthcare: {
+      'marker-color': '#7ec9b1',
+      'marker-symbol': 'hospital',
+      label: 'Healthcare',
+      total: 0,
+      count: 0
     }
   };
 
