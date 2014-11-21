@@ -185,6 +185,7 @@ $(function() {
         });
         marker.bindPopup([
           '<h4 class="point-name">',
+            point.photo ? '<img src="https://dl.dropboxusercontent.com/u/21879/syracuse/' + point.photo + '" class="point-photo">' : '',
             point.details
               ? '<a href="' + point.details + '" target="_blank">' + point.name + '</a>'
               : point.name,

@@ -232,6 +232,9 @@ body {
   padding: 0 8px;
   border-radius: 2px; }
 
+.point-photo {
+  width: 280px; }
+
 @media (max-width: 460px) {
   #map {
     height: 400px; } }
