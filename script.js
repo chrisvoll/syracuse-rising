@@ -170,6 +170,7 @@ $(function() {
 
       for (i in data) {
         var point = data[i];
+        if ( point.status == 'canceled' ) continue;
 
         // Reformat for Datatables: [ [ a,b,c ], ... ]
         tableData.push([
@@ -206,15 +207,17 @@ $(function() {
           types[point.type].count ++;
 
           // Neighborhoods
-          if ( !neighborhoodsData[point.neighborhood] ) {
-            neighborhoodsData[point.neighborhood] = {
-              name: point.neighborhood,
-              total: 0,
-              count: 0
-            };
+          if ( point.neighborhood ) {
+            if ( !neighborhoodsData[point.neighborhood] ) {
+              neighborhoodsData[point.neighborhood] = {
+                name: point.neighborhood,
+                total: 0,
+                count: 0
+              };
+            }
+            neighborhoodsData[point.neighborhood].total += +point.cost.replace(/,/g, '');
+            neighborhoodsData[point.neighborhood].count ++;
           }
-          neighborhoodsData[point.neighborhood].total += +point.cost.replace(/,/g, '');
-          neighborhoodsData[point.neighborhood].count ++;
         }
         data[i].marker = marker;
       }
@@ -255,6 +258,8 @@ $(function() {
         paging    : false,
         searching : false
       });
+
+      $('.project-count').html( tableData.length );
 
 
       ////////////////////////////////////////////
@@ -361,6 +366,9 @@ $(function() {
           .attr( 'class', 'y axis' )
           .call( tall_yAxis );
       
+
+
+      initialize_parallax();
     }
   });
 
@@ -554,3 +562,71 @@ $(function() {
  */
 (function(b,c){var $=b.jQuery||b.Cowboy||(b.Cowboy={}),a;$.throttle=a=function(e,f,j,i){var h,d=0;if(typeof f!=="boolean"){i=j;j=f;f=c}function g(){var o=this,m=+new Date()-d,n=arguments;function l(){d=+new Date();j.apply(o,n)}function k(){h=c}if(i&&!h){l()}h&&clearTimeout(h);if(i===c&&m>e){l()}else{if(f!==true){h=setTimeout(i?k:l,i===c?e-m:e)}}}if($.guid){g.guid=j.guid=j.guid||$.guid++}return g};$.debounce=function(d,e,f){return f===c?a(d,e,false):a(d,f,e!==false)}})(this);
 
+
+
+////////////////////////////////////////////
+//
+// Parallax Photo Scrolling
+//
+////////////////////////////////////////////
+function initialize_parallax() {
+
+  var parallaxes = [];
+
+  if ('ontouchstart' in window || 'onmsgesturechange' in window) {
+    $('body').addClass('no-parallax');
+    return;
+  }
+
+  $('.parallax').each(function() {
+    parallaxes.push({
+      img     : $(this).find('.parallax-image'),
+      top     : $(this).offset().top,
+      caption : $(this).find('.cutline'),
+      height  : $(this).find('.cutline').outerHeight()
+    })
+  });
+
+  var viewportHeight = $(window).height()
+      imageHeight    = viewportHeight * 1.05;
+
+  $(window).on({
+    scroll: function() {
+      var scroll = $(window).scrollTop();
+
+      for ( i in parallaxes ) {
+        var p = parallaxes[i];
+        if ( scroll > p.top - imageHeight && scroll < p.top + imageHeight ) {
+          p.img.css({
+            transform: 'translate3d(0, ' + ( ( scroll - p.top ) / 2 ) + 'px, 0)'
+          });
+
+          if ( p.caption && scroll < p.top + imageHeight - viewportHeight ) {
+            p.caption.css({
+              transform : 'translate3d(0, ' + ( scroll - p.top + viewportHeight - p.height ) + 'px, 0)',
+              opacity   : 1 - ( ( p.top - scroll ) / imageHeight )
+            });
+          } else {
+            p.caption.css({
+              transform : 'translate3d(0, ' + ( imageHeight - p.height ) + 'px, 0)',
+              opacity   : 1
+            });
+          }
+        }
+      }
+
+    },
+
+    resize: function() {
+      viewportHeight = $(window).height();
+      imageHeight    = viewportHeight * 1.05;
+
+      for ( i in parallaxes ) {
+        var p = parallaxes[i];
+        p.top    = p.img.parent().offset().top;
+        p.height = p.caption.outerHeight();
+      }
+    }
+  });
+
+}

@@ -26,10 +26,19 @@
 
   <body>
 
-    <h1 class="h1">Syracuse Rising</h1>
-    <h2 class="h2">How an influx of city-dwellers is revitalizing America's downtowns</h2>
+    <div class="hgroup parallax">
+      <div class="himage parallax-image"></div>
+      <div class="hgradient">
+        <h1 class="h1">Syracuse <span>Rising</span></h1>
+        <h2 class="h2">A visual tour of a city's downtown renaissance</h2>
 
-    <p class="byline">By <span>Chris Voll</span></p>
+        <p class="byline">By <span>Chris Voll</span></p>
+
+        <div class="bracket top"></div>
+        <div class="bracket bottom"></div>
+      </div>
+    </div>
+    <div class="caption hcaption">A snowy Armory Square on Nov. 14, 2014. Once filled with crumbling abandoned warehouses, the area has been transformed into a thriving downtown cultural center.</div>
 
     <div class="text-block">
       <p><span class="dropcap">O</span><span class="lede">ver the past</span> five years, the oft-repeated narrative of the struggling rust belt city center has eroded away. Stories of vacant buildings, rising crime, and gritty perseverance have been replaced by those of gentrification, investment, and prosperity. Syracuse, once a city afraid of change, has begun to embrace luxury apartments, coffee shops, and other symbols of progressive reinvention that have characterized the growth of other more liveable cities.</p>
@@ -40,33 +49,45 @@
     </div>
 
     <!-- Syracuse Developments Map -->
-    <h3 class="h3">New Development Projects in Syracuse</h3>
+    <h3 class="h3">New <span>Development Projects</span> in Syracuse</h3>
     <div id="map"></div>
 
 
     <!-- Syracuse Developments Money Flow -->
     <div class="text-block">
-      <h3 class="h3">Where is the $2.9 billion going?</h3>
+      <h3 class="h3">Where is the <span>$2.9 billion</span> going?</h3>
 
-      <p>Interestingly, despite the large housing boom in downtown Syracuse, only a small share of the total amount invested has been in residential properties. However, it is important to note that large projects like Destiny USA ($540 million), Inner Harbor ($350 million) and Loguen Crossing ($340 million) skew these numbers.
+      <p>Despite the enormous housing boom in downtown Syracuse, only a small share of investments are going to dedicated residential properties. Instead, more focus has been placed on mixed-use development.</p>
 
       <div id="money"></div>
 
-      <h3 class="h3">Which projects have the highest average cost?</h3>
+      <p>The Lakefront neighborhood is home to both the Destiny USA regional shopping center and the Inner Harbor mixed-use development, which combine to over $1 billion in investment from private developers. University Hill and Downtown are characterized by many smaller building projects on the SU, ESF and Upstate campuses.</p>
+
+      <p>University Hill has seen the greatest interest in developers, characterized by many large construction projects by Syracuse University, SUNY ESF, and Upstate Medical University. The neighborhood is also home to Loguen Crossing, a $350 million planned development on land owned by Upstate.</p>
+
+      <p>The Lakefront neighborhood is composed of two major investments totalling nearly $1 billion, the Destiny USA shopping center and the mixed-use Inner Harbor project.</p>
+
+      <div id="neighborhoods"></div>
+
+    </div>
+
+    <div class="parallax">
+      <div class="parallax-image parallax-image-1" style="background-image: url(./assets/schine.jpg);"></div>
+      <div class="cutline cutline-1"><strong>University Hill</strong> is home to Syracuse University, SUNY ESF, Upstate Medical University, Crouse Hospital, and the future Loguen Crossing development.</div>
+    </div>
+
+    <div class="text-block">
+
+      <h3 class="h3">Which projects have the <span>highest average cost?</span></h3>
 
       <div id="average"></div>
 
-      <h3 class="h3">Which neighborhoods are benefitting the most?</h3>
-
-      <p>The Lakefront neighborhood is home to both the Destiny USA regional shopping center and the Inner Harbor mixed-use development, which combine to over $1 billion in investment from private developers. University Hill and Downtown are characterized by many smaller building projects on the SU, ESF and Upstate campuses.</p>
-
-      <div id="neighborhoods"></div>
     </div>
 
 
     <div class="text-block">
 
-      <h3 class="h3">How does Syracuse compare?</h3>
+      <h3 class="h3">How does Syracuse <span>compare?</span></h3>
 
       <p>While capital investments are difficult to compare amongst different regions, the economic stability of Syracuse can be viewed through the proxy of its poverty levels. Compared to most of the Northeast and Midwest, Onondaga's poverty level of 9.6% is is about average, if not slightly high.</p>
 
@@ -75,23 +96,35 @@
     <div id="national"></div>
 
     <div class="text-block">
-
       <p><em>Source: U.S. Census Bureau, 2012 5-year estimates, American Community Survey</em></p>
+    </div>
 
+    <div class="parallax">
+      <div class="parallax-image parallax-image-2" style="background-image: url(./assets/brennan.jpg);"></div>
+      <div class="cutline cutline-2"><strong>The Brennan Buildings</strong> are among many vacant buildings downtown that city officials hope to see revitalized in the coming years.</div>
     </div>
 
 
     <div class="text-block">
 
-      <h3 class="h3">All Projects</h3>
+      <h3 class="h3">All <span><span class="project-count"></span> Projects</span></h3>
 
       <table class="datatable" cellpadding="0" cellspacing="0" border="0"></table>
 
     </div>
 
+
+
+
+
+    <div class="parallax" style="margin-bottom: 0">
+      <div class="parallax-image parallax-image-3" style="background-image: url(./assets/connective_corridor.jpg);"></div>
+      <div class="cutline cutline-3"><strong>The Connective Corridor</strong> aims to bridge the gap between Syracuse University and Downtown Syracuse, opening up opportunities for development along a new bus route and bicycle track.</div>
+    </div>
+
     <div class="text-block">
 
-      <h3 class="h3">About</h3>
+      <h3 class="h3"><span>About</span> this Project</h3>
 
       <p>Chris Voll is a student at the S.I. Newhouse School of Public Communications in Syracuse, NY. This is a data visualization project for NEW 300. As a living document, it will continue to be updated as new development projects throughout the city are announced, and at this stage is only a draft.</p>
 
@@ -99,8 +132,15 @@
 
       <p>Please note that the building locations are approximate, based on the best available public information found from the Syracuse Downtown Committee, on Google Maps, on Syracuse.com, or on the respective websites for the buildings, developers, and tenants. To report inaccuracies, please email <a href="mailto:chris+syr@chrisvoll.com">chris+syr@chrisvoll.com</a>.</p>
 
-      <p>Last updated on November 21, 2014.</p>
+      <p>Last updated on November 23, 2014.</p>
 
+    </div>
+
+
+
+    <div class="parallax" style="margin-bottom: 0">
+      <div class="parallax-image parallax-image-4" style="background-image: url(./assets/downtown.jpg);"></div>
+      <div class="cutline cutline-4"><strong>Downtown Syracuse</strong>, viewed from University Hill in 2012 sitting beyond the I-81 viaduct that divides the two neighborhoods.</div>
     </div>
 
 
