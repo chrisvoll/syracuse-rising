@@ -286,6 +286,9 @@ td, th {
 .point-photo {
   width: 280px; }
 
+.leaflet-control-attribution {
+  font: 400 11px proxima-nova, Helvetica Neue, Arial, Helvetica, sans-serif; }
+
 @media (max-width: 460px) {
   #map {
     height: 400px; } }

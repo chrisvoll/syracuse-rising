@@ -13,6 +13,7 @@
     <script src="bower_components/d3-tip/index.js"></script>
     <script src="bower_components/topojson/topojson.js"></script>
     <script src="bower_components/tabletop/src/tabletop.js"></script>
+    <script src="bower_components/handlebars/handlebars.min.js"></script>
     <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="vendor/js/dropcap.js"></script>
     <script src="http://d3js.org/queue.v1.min.js"></script>
@@ -51,6 +52,7 @@
     <!-- Syracuse Developments Map -->
     <h3 class="h3">New <span>Development Projects</span> in Syracuse</h3>
     <div id="map"></div>
+    <div class="caption">New building projects within Syracuse since 2010, including those currently under construction and planned for the future. <a href="https://docs.google.com/spreadsheets/d/19JnF3xjfnGSLN0Gzoh-Gw2pNfbQVJYGq7XzZMYfMK-Q/edit?usp=sharing">See all data &rsaquo;</a></div>
 
 
     <!-- Syracuse Developments Money Flow -->
@@ -141,6 +143,39 @@
     <div class="parallax" style="margin-bottom: 0">
       <div class="parallax-image parallax-image-4" style="background-image: url(./assets/downtown.jpg);"></div>
       <div class="cutline cutline-4"><strong>Downtown Syracuse</strong>, viewed from University Hill in 2012 sitting beyond the I-81 viaduct that divides the two neighborhoods.</div>
+    </div>
+
+
+
+
+
+    <div class="templates">
+
+      <script id="popup-template" type="text/x-handlebars-template">
+        {{#if photo}}
+          <img src="https://dl.dropboxusercontent.com/u/21879/syracuse/{{ photo }}" class="point-photo">
+        {{/if}}
+        <h4 class="point-name">
+          {{#if details}}
+            <a href="{{ details }}" target="_blank">{{ name }}</a>
+          {{else}}
+            {{ name }}
+          {{/if}}
+        </h4>
+        {{#if description}}
+          <div class="point-description">{{ description }}</div>
+        {{/if}}
+
+        <div class="point-meta">
+          <span class="point-type" style="background-color: {{ typeData.marker-color }};">
+            {{ typeData.label }}
+          </span>
+          {{#if cost}}
+             &nbsp; ${{ formattedCost }}
+          {{/if}}
+        </div>
+      </script>
+
     </div>
 
 

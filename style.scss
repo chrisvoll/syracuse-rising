@@ -211,6 +211,9 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
   .point-photo {
     width: 280px;
   }
+  .leaflet-control-attribution {
+    font: 400 11px $sans;
+  }
 
   @media (max-width: 460px) {
     #map {
