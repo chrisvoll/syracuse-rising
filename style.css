@@ -246,22 +246,31 @@ td, th {
   .text-block .h1, .text-block .h2, .text-block .h3 {
     padding: 0; }
 
-@media (max-width: 460px) {
+@media (max-width: 940px) {
   .h1 {
-    font-size: 50px;
-    font-weight: 500;
-    line-height: 100%;
-    margin-top: 50px;
-    margin-bottom: 10px; }
+    font-size: 100px;
+    letter-spacing: -2px; }
 
   .h2 {
-    font-size: 28px; }
-
-  .byline {
-    margin-bottom: 40px; }
+    font-size: 35px; }
 
   .text-block p {
     font-size: 16px; } }
+@media (max-width: 650px) {
+  .h1 {
+    font-size: 70px; }
+
+  .h2 {
+    font-size: 25px; } }
+@media (max-height: 800px) {
+  .h1 {
+    padding-top: 250px; } }
+@media (max-height: 600px) {
+  .h1 {
+    padding-top: 180px; } }
+@media (max-height: 500px) {
+  .h1 {
+    padding-top: 130px; } }
 #map {
   width: 100%;
   height: 400px;
