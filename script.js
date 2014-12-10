@@ -11,6 +11,45 @@ $(function() {
 
   ////////////////////////////////////////////
   //
+  // Navigation
+  //
+  ////////////////////////////////////////////
+
+    var scrollTop       = $(window).scrollTop(),
+        scrollThreshold = -50,
+        scrollAmount    =   0,
+        shown = false,
+        $nav  = $('.navigation');
+
+    if ( $nav.length ) {
+      $(window).on('scroll', $.throttle(250, function(e) {
+        var newScrollTop = $(window).scrollTop();
+
+        if ( ( newScrollTop > scrollTop && scrollAmount < 0 )     // scroll down
+          || ( newScrollTop < scrollTop && scrollAmount > 0 ) ) { // scroll up
+          scrollAmount = 0;
+        }
+        scrollAmount += newScrollTop - scrollTop;
+
+        if ( scrollAmount <= scrollThreshold ) {
+          if ( shown == false ) {
+            shown = true;
+            $nav.show().animate({ top: 0 }, 300);
+          }
+        } else if ( shown == true ) {
+          shown = false;
+          $nav.animate({ top: -100 }, 300, function() {
+            $nav.hide();
+          });
+        }
+
+        scrollTop = newScrollTop;
+      }));
+    }
+
+
+  ////////////////////////////////////////////
+  //
   // Syracuse Map
   //
   ////////////////////////////////////////////
@@ -188,13 +227,16 @@ $(function() {
           point.cost ? '$' + point.cost : ''
         ]);
 
-        // Plot the points on the map
-        var marker = L.marker( [point.lat, point.lon], {
-          icon: L.mapbox.marker.icon( point.typeData )
-        });
+        // Plot the points on the map, if we have an address
+        if ( point.lat && point.lon ) {
+          var marker = L.marker( [point.lat, point.lon], {
+            icon: L.mapbox.marker.icon( point.typeData )
+          });
 
-        marker.bindPopup( popupTemplate( point ) );
-        marker.addTo(map);
+          marker.bindPopup( popupTemplate( point ) );
+          marker.addTo(map);
+          data[i].marker = marker;
+        }
 
         if ( point.cost ) {
 
@@ -215,7 +257,6 @@ $(function() {
             neighborhoodsData[point.neighborhood].count ++;
           }
         }
-        data[i].marker = marker;
       }
 
       // Reformat Types for D3:
@@ -583,7 +624,7 @@ $(function() {
           var p = parallaxes[i];
           if ( scroll > p.top - imageHeight && scroll < p.top + imageHeight ) {
             p.img.css({
-              transform: 'translate3d(0, ' + ( ( scroll - p.top ) / 2 ) + 'px, 0)'
+              transform: 'translate3d(0, ' + ( ( scroll - p.top ) / 1.7 ) + 'px, 0)'
             });
 
             if ( p.caption && scroll < p.top + imageHeight - viewportHeight ) {
