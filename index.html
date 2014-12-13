@@ -87,7 +87,10 @@
     <!-- - - - - - - - - - - - - - - - - - - -->
 
       <h3 class="h3">New <span>Development Projects</span> in Syracuse</h3>
-      <div id="map"></div>
+      <div class="map-container">
+        <div id="map"></div>
+        <div class="map-details"></div>
+      </div>
       <div class="caption">
         <span class="arrow"></span>
         New building projects within Syracuse since 2010, including those currently under construction and planned for the future. <a href="https://docs.google.com/spreadsheets/d/19JnF3xjfnGSLN0Gzoh-Gw2pNfbQVJYGq7XzZMYfMK-Q/edit?usp=sharing">See all data &rsaquo;</a>
@@ -223,29 +226,98 @@
 
       <div class="templates">
 
-        <script id="popup-template" type="text/x-handlebars-template">
-          {{#if photo}}
-            <img src="https://dl.dropboxusercontent.com/u/21879/syracuse/{{ photo }}" class="point-photo">
-          {{/if}}
-          <h4 class="point-name">
-            {{#if details}}
-              <a href="{{ details }}" target="_blank">{{ name }}</a>
-            {{else}}
-              {{ name }}
-            {{/if}}
-          </h4>
-          {{#if description}}
-            <div class="point-description">{{ description }}</div>
+        <script id="details-template" type="text/x-handlebars-template">
+
+          {{#if photo }}
+          <div class="details-header with-photo" style="background-image: url(https://dl.dropboxusercontent.com/u/21879/syracuse/{{ photo }});">
+          {{else}}
+          <div class="details-header without-photo">
           {{/if}}
 
-          <div class="point-meta">
-            <span class="point-type" style="background-color: {{ typeData.marker-color }};">
-              {{ typeData.label }}
-            </span>
-            {{#if cost}}
-               &nbsp; ${{ formattedCost }}
-            {{/if}}
+            <div class="details-header-inner">
+              {{#if details}}
+                <h2><a href="{{ details }}">{{ name }}</a></h2>
+              {{else}}
+                <h2>{{ name }}</h2>
+              {{/if}}
+
+              <div class="details-meta">
+                <span class="point-type" style="background-color: {{ typeData.marker-color }};">
+                  {{ typeData.label }}
+                </span>
+                {{#if cost}}
+                   &nbsp; ${{ formattedCost }}
+                {{/if}}
+              </div>
+            </div>
+
           </div>
+
+          {{#if description}}
+            <div class="details-description">
+              {{ description }}
+            </div>
+          {{/if}}
+
+          <table class="details-table">
+            <tbody>
+              {{#if status}}
+                <tr>
+                  <th>Status</th>
+                  <td class="status status-{{ status }}">{{ statusLabel }}</td>
+                </tr>
+              {{/if}}
+              {{#if neighborhood}}
+                <tr>
+                  <th>Neighborhood</th>
+                  <td>{{ neighborhood }}</td>
+                </tr>
+              {{/if}}
+              {{#if developer}}
+                <tr>
+                  <th>Developer</th>
+                  <td>{{ developer }}</td>
+                </tr>
+              {{/if}}
+              {{#if tenants}}
+                <tr>
+                  <th>Tenants</th>
+                  <td>{{ tenants }}</td>
+                </tr>
+              {{/if}}
+              {{#if year}}
+                <tr>
+                  <th>Completion</th>
+                  <td>{{ year }}</td>
+                </tr>
+              {{/if}}
+              {{#if originyear}}
+                <tr>
+                  <th>Originally Built</th>
+                  <td>{{ originyear }}</td>
+                </tr>
+              {{/if}}
+              {{#if sqft}}
+                <tr>
+                  <th>Square Feet</th>
+                  <td>{{ sqft }}</td>
+                </tr>
+              {{/if}}
+              {{#if units}}
+                <tr>
+                  <th>Housing Units</th>
+                  <td>{{ units }}</td>
+                </tr>
+              {{/if}}
+              {{#if stories}}
+                <tr>
+                  <th>Floors</th>
+                  <td>{{ stories }}</td>
+                </tr>
+              {{/if}}
+            </tbody>
+          </table>
+
         </script>
 
       </div>

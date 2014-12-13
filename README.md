@@ -1,6 +1,6 @@
 http://chrisvoll.com/syracuse-rising/
 
-## Projects used
+## Libraries & Tools Used
 
 - D3, D3-Tip
 - Tabletop.js
@@ -11,3 +11,4 @@ http://chrisvoll.com/syracuse-rising/
 - OpenStreetMap
 - Leaflet, Leaflet Omnivore
 - Topojson
+- Typekit

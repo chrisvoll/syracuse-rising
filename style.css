@@ -367,11 +367,12 @@ td, th {
 .point-type {
   display: inline-block;
   color: #FFF;
-  font-weight: bold;
+  font-weight: 600;
   text-transform: uppercase;
-  font-size: 10px;
-  padding: 0 8px;
-  border-radius: 2px; }
+  font-size: 12px;
+  padding: 2px 5px 1px;
+  border-radius: 2px;
+  -webkit-font-smoothing: antialiased; }
 
 .point-photo {
   width: 280px; }
@@ -382,6 +383,87 @@ td, th {
 @media (max-width: 460px) {
   #map {
     height: 400px; } }
+.map-container {
+  position: relative; }
+
+.map-details {
+  color: #333;
+  position: absolute;
+  top: 10px;
+  left: 50px;
+  width: 360px;
+  background: #FFF;
+  border-radius: 4px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2); }
+  .map-details .details-header {
+    color: #FFF;
+    font: 300 13px proxima-nova, Helvetica Neue, Arial, Helvetica, sans-serif;
+    height: 270px;
+    position: relative;
+    background-position: center center;
+    background-size: cover;
+    background-color: #5D3EA4;
+    border-radius: 4px 4px 0 0;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    -webkit-font-smoothing: antialiased; }
+    .map-details .details-header .details-header-inner {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      padding: 60px 25px 25px;
+      background-image: -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(0, 0, 0, 0.75)));
+      background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.75));
+      background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.75));
+      background-image: linear-gradient(top, transparent, rgba(0, 0, 0, 0.75)); }
+    .map-details .details-header.without-photo .details-header-inner {
+      padding: 25px;
+      background: transparent; }
+  .map-details .details-description {
+    padding: 25px;
+    font: 300 14px/180% proxima-nova, Helvetica Neue, Arial, Helvetica, sans-serif;
+    border-bottom: 1px solid #DDD; }
+  .map-details .details-table {
+    font: 300 13px proxima-nova, Helvetica Neue, Arial, Helvetica, sans-serif;
+    margin: 21px 19px; }
+    .map-details .details-table th, .map-details .details-table td {
+      text-align: left;
+      padding: 4px 6px; }
+    .map-details .details-table th {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #999;
+      -webkit-font-smoothing: antialiased; }
+  .map-details h2 {
+    margin: 0 0 10px;
+    font: 300 30px proxima-nova, Helvetica Neue, Arial, Helvetica, sans-serif;
+    line-height: 100%; }
+    .map-details h2 a {
+      color: inherit;
+      text-decoration: none; }
+
+.status {
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased; }
+
+.status-completed {
+  color: #6AA84F; }
+
+.status-under-construction {
+  color: #3D85C6; }
+
+.status-planned {
+  color: #E69138; }
+
+.status-unclear {
+  color: #CC0000; }
+
+.status-canceled {
+  color: #F1C232; }
+
+.status-proposed {
+  color: #A64D79; }
+
 .bar {
   fill: #DDD; }
 

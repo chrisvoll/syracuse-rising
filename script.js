@@ -110,6 +110,15 @@ $(function() {
       }
     };
 
+    var status = {
+      'completed'            : 'Completed',
+      'under-construction'   : 'Under Construction',
+      'planned'              : 'Planned',
+      'unclear'              : 'Unclear',
+      'canceled'             : 'Canceled',
+      'proposed'             : 'Proposed'
+    };
+
 
   ////////////////////////////////////////////
   //
@@ -189,7 +198,8 @@ $(function() {
   var d3Data    = [],
       tableData = [],
       neighborhoodsData = {},
-      neighborhoodsSorted = [];
+      neighborhoodsSorted = [],
+      $details = $('.map-details');
 
 
   ////////////////////////////////////////////
@@ -210,13 +220,14 @@ $(function() {
       //
       ////////////////////////////////////////////
 
-      var popupTemplate = Handlebars.compile( $('#popup-template').html() );
+      var detailsTemplate = Handlebars.compile( $('#details-template').html() );
 
       for (i in data) {
         var point = data[i];
         if ( point.status == 'canceled' ) continue;
 
-        point.typeData = types[point.type];
+        point.typeData      = types[point.type];
+        point.statusLabel   = status[point.status];
         point.formattedCost = formatMoney( point.cost );
 
         // Reformat for Datatables: [ [ a,b,c ], ... ]
@@ -232,8 +243,12 @@ $(function() {
           var marker = L.marker( [point.lat, point.lon], {
             icon: L.mapbox.marker.icon( point.typeData )
           });
+          marker.point = point;
 
-          marker.bindPopup( popupTemplate( point ) );
+          marker.on('click', function() {
+            $details.html( detailsTemplate( this.point ) );
+          });
+
           marker.addTo(map);
           data[i].marker = marker;
         }
