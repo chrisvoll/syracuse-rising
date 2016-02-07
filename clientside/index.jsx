@@ -1,4 +1,15 @@
-var ReactDOM = require('react-dom');
-var React = require('react');
+import React from 'react';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import appStore from './reducers';
+import App from './components/App.jsx';
 
-ReactDOM.render(<div>test</div>, document.getElementById('react-test'));
+let store = createStore(appStore);
+
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);

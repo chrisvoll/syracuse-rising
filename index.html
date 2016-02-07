@@ -8,25 +8,14 @@
     <script src="//use.typekit.net/tmh8mxl.js"></script>
     <script>try{Typekit.load();}catch(e){}</script>
 
-    <script src="./output/bundle.js"></script>
-
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/d3/d3.min.js"></script>
-    <script src="bower_components/d3-tip/index.js"></script>
-    <script src="bower_components/topojson/topojson.js"></script>
-    <script src="bower_components/tabletop/src/tabletop.js"></script>
-    <script src="bower_components/handlebars/handlebars.min.js"></script>
-    <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script src="http://d3js.org/queue.v1.min.js"></script>
-    <script src="https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js"></script>
-    <script src="script.js?113014"></script>
-
-    <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css">
-    <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.min.css">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.13.1/mapbox-gl.js'></script>
     <link rel="stylesheet" href="style.css?113014">
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.13.1/mapbox-gl.css' rel='stylesheet' />
   </head>
 
   <body>
+
+    <div id="root"></div>
 
     <!-- - - - - - - - - - - - - - - - -->
     <!-- Photo: Header & Armory Square -->
@@ -323,5 +312,8 @@
         ga('send', 'pageview');
       </script>
 
+
+
+    <script src="./output/bundle.js"></script>
   </body>
 </html>
