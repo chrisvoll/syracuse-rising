@@ -1,17 +1,17 @@
 var types = {
   commercial: {
     'marker-color': '#9c89cc',
-    'marker-symbol': 'commercial',
+    'marker-symbol': 'shop',//
     label: 'Commercial'
   },
   residential: {
     'marker-color': '#f86767',
-    'marker-symbol': 'building',
+    'marker-symbol': 'town-hall',//
     label: 'Residential'
   },
   mixed: {
     'marker-color': '#1087BF',
-    'marker-symbol': 'city',
+    'marker-symbol': 'shop',
     label: 'Mixed-use'
   },
   infrastructure: {
