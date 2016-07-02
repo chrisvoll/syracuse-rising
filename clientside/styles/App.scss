@@ -1,3 +1,11 @@
 .app {
   position: relative;
 }
+
+.hovered .mapboxgl-canvas-container.mapboxgl-interactive {
+  cursor: pointer;
+}
+
+.mapboxgl-canvas {
+  outline: none;
+}

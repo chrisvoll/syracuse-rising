@@ -3,7 +3,11 @@ import Animation from 'react-addons-css-transition-group';
 import '../styles/Omnibox.scss';
 import listingEnum from '../helpers/listingEnum';
 
-class Omnibox extends React.Component {
+var Omnibox = React.createClass({
+  propTypes: {
+    selectedListing: React.PropTypes.object
+  },
+
   renderOmnibox() {
     const listing = this.props.selectedListing;
     if (!listing) {
@@ -11,32 +15,32 @@ class Omnibox extends React.Component {
     }
 
     var style = {};
-    if (listing.photo) {
-      style.backgroundImage = 'url(https://dl.dropboxusercontent.com/u/21879/syracuse/' + listing.photo + ')';
+    if (listing.get('photo')) {
+      style.backgroundImage = 'url(https://dl.dropboxusercontent.com/u/21879/syracuse/' + listing.get('photo') + ')';
     }
 
     return <div className="omnibox">
-      <div className="omnibox__photo" style={ style }>
+      <div className="omnibox__photo" style={style}>
         <div className="omnibox__header">
           <div className="omnibox__title">
-            {listing.name}
+            {listing.get('name')}
           </div>
 
-          <div className="omnibox__type" style={{ background: listingEnum.types[listing.type]['marker-color'] }}>
-            {listingEnum.types[listing.type].label}
+          <div className="omnibox__type" style={{ background: listingEnum.types[listing.get('type')]['marker-color'] }}>
+            {listingEnum.types[listing.get('type')].label}
           </div>
 
           {listing.cost &&
             <div className="omnibox__cost">
-              ${listing.cost}
+              ${listing.get('cost')}
             </div>
           }
         </div>
       </div>
 
-      {listing.description &&
+      {listing.get('description') &&
         <div className="omnibox__description">
-          {listing.description}
+          {listing.get('description')}
         </div>
       }
 
@@ -46,18 +50,18 @@ class Omnibox extends React.Component {
             Status
           </div>
           <div className="omnibox__details__row__value">
-            {listingEnum.status[listing.status]}
+            {listingEnum.status[listing.get('status')]}
           </div>
         </div>
       </div>
     </div>;
-  }
+  },
 
   render() {
     return <Animation transitionName="omnibox-animation" transitionEnterTimeout={200} transitionLeaveTimeout={200}>
       {this.renderOmnibox()}
     </Animation>;
   }
-}
+});
 
 export default Omnibox;

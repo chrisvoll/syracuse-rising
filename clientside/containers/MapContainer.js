@@ -1,11 +1,13 @@
 import { connect } from 'react-redux';
-import { selectListing } from '../actions';
-import Map from '../components/Map.jsx';
+import { selectListing,
+         hoverListing } from '../AppActions';
+import Map from '../components/Map';
 
 const mapStateToProps = (state) => {
   return {
     listings: state.listings,
-    selectedListing: state.selectedListing
+    selectedListing: state.selectedListing,
+    hoveredListing: state.hoveredListing
   };
 };
 
@@ -13,6 +15,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onSelectListing: listingId => {
       dispatch(selectListing(listingId));
+    },
+
+    onHoverListing: listingId => {
+      dispatch(hoverListing(listingId));
     }
   };
 };

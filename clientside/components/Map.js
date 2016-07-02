@@ -5,7 +5,7 @@ var mapboxgl = window.mapboxgl;
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3ZvbGwiLCJhIjoiNWYxYzJiMTU4NWM2MDRmNjgzMjcwZWI0Y2YxZmEyZWYifQ._j4hcQH-5ngUVb_lDFEoZg';
 
-class Map extends React.Component {
+var Map = React.createClass({
   componentDidMount() {
     this.map = new mapboxgl.Map({
       container: ReactDOM.findDOMNode(this),
@@ -14,13 +14,13 @@ class Map extends React.Component {
       zoom: 11.15,
       pitch: 30
     });
-  }
+  },
 
   componentDidUpdate(prevProps) {
     if (this.props.listings.length && prevProps.listings !== this.props.listings) {
       this.plotListings(this.props.listings);
     }
-  }
+  },
 
   plotListings(listings) {
     const markers = {
@@ -31,7 +31,7 @@ class Map extends React.Component {
           properties: {
             listing,
             'marker-symbol': listingEnum.types[listing.type]['marker-symbol'],
-            'marker-color': listingEnum.types[listing.type]['marker-color']
+            'icon-color': listingEnum.types[listing.type]['marker-color']
           },
           geometry: {
             type: 'Point',
@@ -57,27 +57,52 @@ class Map extends React.Component {
     });
 
     this.map.on('click', this.handleClick.bind(this));
-  }
+    this.map.on('mousemove', this.handleMouseMove.bind(this));
+  },
 
-  handleClick(e) {
+  featuresAtEvent(e, callback) {
     this.map.featuresAt(e.point, {
       layer: 'markers',
       radius: 10,
       includeGeometry: true
-    }, (err, features) => {
+    }, callback.bind(this));
+  },
+
+  handleClick(e) {
+    this.featuresAtEvent(e, (err, features) => {
       if (err || !features.length) {
         this.props.onSelectListing(null);
         return;
       }
 
-      var feature = features[0];
-      this.props.onSelectListing(feature.properties.listing.id);
+      this.props.onSelectListing(features[0].properties.listing.id);
     });
-  }
+  },
+
+  handleMouseMove(e) {
+    this.featuresAtEvent(e, (err, features) => {
+      if (err || !features.length) {
+        this.props.onHoverListing(null);
+        return;
+      }
+
+      this.props.onHoverListing(features[0].properties.listing.id);
+    });
+  },
 
   render() {
-    return <div style={{ width: '100%', height: '90vh' }} />;
+    var style = {
+      width: '100%',
+      height: '90vh'
+    };
+
+    var className = '';
+    if (this.props.hoveredListing) {
+      className = 'hovered';
+    }
+
+    return <div className={className} style={style} />;
   }
-}
+});
 
 export default Map;

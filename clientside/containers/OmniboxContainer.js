@@ -1,16 +1,15 @@
 import { connect } from 'react-redux';
-import { selectListing } from '../actions';
-import Omnibox from '../components/Omnibox.jsx';
+import { selectListing,
+         deselectListing } from '../AppActions';
+import Omnibox from '../components/Omnibox';
 
 const mapStateToProps = (state) => {
   let selectedListing = null;
-  const selectedListings = state.listings.filter(l => l.id === state.selectedListing);
-  if (selectedListings.length) {
-    selectedListing = selectedListings[0];
+  const selectedListings = state.get('listings').filter(l => l.get('id') === state.get('selectedListing'));
+  if (selectedListings.size) {
+    selectedListing = selectedListings.first();
   }
-  return {
-    selectedListing
-  };
+  return { selectedListing };
 };
 
 const mapDispatchToProps = (dispatch) => {
