@@ -78,9 +78,11 @@ var OmniboxDetail = React.createClass({
         {this.tag('units', '{value} units')}
         {this.tag('originalyear', 'built in {value}')}
 
-        <a className="omnibox__details__source" href={listing.get('details')} target="_blank">
-          More Information
-        </a>
+        {listing.get('details') &&
+          <a className="omnibox__details__source" href={listing.get('details')} target="_blank">
+            More Information
+          </a>
+        }
       </div>
     </div>
   }
