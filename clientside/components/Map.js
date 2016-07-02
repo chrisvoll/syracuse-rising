@@ -17,20 +17,31 @@ var Map = React.createClass({
       pitch: 30
     });
 
+    this.map.on('load', this.plotListingsAfterEverythingIsLoaded);
+
     this.popup = new mapboxgl.Popup({
       closeButton: false,
       closeOnClick: false
     });
+
+    this.loadCount = 0;
   },
 
   componentDidUpdate(prevProps) {
     if (this.props.listings.size && prevProps.listings !== this.props.listings) {
-      this.plotListings(this.props.listings);
+      this.plotListingsAfterEverythingIsLoaded();
     }
 
     if (this.props.hoveredListing !== prevProps.hoveredListing) {
       this.setHovered(this.props.hoveredListing);
     }
+  },
+
+  plotListingsAfterEverythingIsLoaded() {
+    this.loadCount++;
+    if (this.loadCount < 2) return;
+
+    this.plotListings(this.props.listings);
   },
 
   setHovered(id) {
@@ -193,17 +204,12 @@ var Map = React.createClass({
   },
 
   render() {
-    var style = {
-      width: '100%',
-      height: '90vh'
-    };
-
-    var className = '';
+    var className = 'map';
     if (this.props.hoveredListing) {
-      className = 'hovered';
+      className = 'map map--hovered';
     }
 
-    return <div className={className} style={style} />;
+    return <div className={className} />;
   }
 });
 

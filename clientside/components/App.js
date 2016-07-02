@@ -1,7 +1,6 @@
 import React from 'react';
 import MapContainer from '../containers/MapContainer';
 import OmniboxContainer from '../containers/OmniboxContainer';
-import TableContainer from '../containers/TableContainer';
 import '../styles/App.scss';
 
 var App = React.createClass({
@@ -15,9 +14,10 @@ var App = React.createClass({
 
   render() {
     return <div>
-      <MapContainer />
-      <OmniboxContainer />
-      <TableContainer />
+      <div className="map-container">
+        <OmniboxContainer />
+        <MapContainer />
+      </div>
     </div>;
   }
 });
