@@ -17,7 +17,7 @@ var Map = React.createClass({
   },
 
   componentDidUpdate(prevProps) {
-    if (this.props.listings.length && prevProps.listings !== this.props.listings) {
+    if (this.props.listings.size && prevProps.listings !== this.props.listings) {
       this.plotListings(this.props.listings);
     }
   },
@@ -29,13 +29,13 @@ var Map = React.createClass({
         return {
           type: 'Feature',
           properties: {
-            listing,
-            'marker-symbol': listingEnum.types[listing.type]['marker-symbol'],
-            'icon-color': listingEnum.types[listing.type]['marker-color']
+            listingId: listing.get('id'),
+            'marker-symbol': listingEnum.types[listing.get('type')]['marker-symbol'],
+            'icon-color': listingEnum.types[listing.get('type')]['marker-color']
           },
           geometry: {
             type: 'Point',
-            coordinates: [listing.lon, listing.lat]
+            coordinates: [listing.get('lon'), listing.get('lat')]
           }
         }
       })
@@ -56,37 +56,37 @@ var Map = React.createClass({
       }
     });
 
-    this.map.on('click', this.handleClick.bind(this));
-    this.map.on('mousemove', this.handleMouseMove.bind(this));
+    this.map.on('click', this.handleClick);
+    this.map.on('mousemove', this.handleMouseMove);
   },
 
   featuresAtEvent(e, callback) {
-    this.map.featuresAt(e.point, {
-      layer: 'markers',
-      radius: 10,
-      includeGeometry: true
-    }, callback.bind(this));
+    var features = this.map.queryRenderedFeatures(e.point, {
+      layers: ['markers']
+    });
+
+    callback(features);
   },
 
   handleClick(e) {
-    this.featuresAtEvent(e, (err, features) => {
-      if (err || !features.length) {
+    this.featuresAtEvent(e, features => {
+      if (!features.length) {
         this.props.onSelectListing(null);
         return;
       }
 
-      this.props.onSelectListing(features[0].properties.listing.id);
+      this.props.onSelectListing(features[0].properties.listingId);
     });
   },
 
   handleMouseMove(e) {
-    this.featuresAtEvent(e, (err, features) => {
-      if (err || !features.length) {
+    this.featuresAtEvent(e, features => {
+      if (!features.length) {
         this.props.onHoverListing(null);
         return;
       }
 
-      this.props.onHoverListing(features[0].properties.listing.id);
+      this.props.onHoverListing(features[0].properties.listingId);
     });
   },
 

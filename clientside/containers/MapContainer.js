@@ -5,9 +5,9 @@ import Map from '../components/Map';
 
 const mapStateToProps = (state) => {
   return {
-    listings: state.listings,
-    selectedListing: state.selectedListing,
-    hoveredListing: state.hoveredListing
+    listings: state.get('listings'),
+    selectedListing: state.get('selectedListing'),
+    hoveredListing: state.get('hoveredListing')
   };
 };
 

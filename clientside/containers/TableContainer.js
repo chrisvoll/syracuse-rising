@@ -1,9 +1,15 @@
 import { connect } from 'react-redux';
 import Table from '../components/Table';
 
+function intCost(cost) {
+  return parseInt(cost.replace(/,/g, '') || 0, 10);
+}
+
 const mapStateToProps = (state) => {
   return {
-    listings: state.get('listings')
+    listings: state.get('listings').sort((a, b) => {
+      return intCost(b.get('cost')) - intCost(a.get('cost'));
+    })
   };
 };
 
