@@ -11,7 +11,7 @@ var Map = React.createClass({
       container: ReactDOM.findDOMNode(this),
       style: 'mapbox://styles/mapbox/streets-v8',
       center: [-76.1486941, 43.0476822],
-      zoom: 11.15,
+      zoom: 12.4,
       pitch: 30
     });
   },
@@ -52,7 +52,8 @@ var Map = React.createClass({
       type: 'symbol',
       source: 'markers',
       layout: {
-        'icon-image': "{marker-symbol}-15"
+        'icon-image': '{marker-symbol}-15',
+        'icon-allow-overlap': true
       }
     });
 
