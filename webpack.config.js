@@ -13,9 +13,11 @@ module.exports = {
     filename: "bundle.js"
   },
   resolve: {
+    extensions: ['', '.js'],
     alias: {
       // For Mapbox-GL-JS
-      'webworkify': 'webworkify-webpack'
+      'webworkify': 'webworkify-webpack',
+      'mapbox-gl': path.resolve('./node_modules/mapbox-gl/dist/mapbox-gl.js')
     }
   },
   module: {
