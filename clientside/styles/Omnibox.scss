@@ -1,4 +1,6 @@
 .omnibox {
+  display: flex;
+  flex-direction: column;
   flex: 0 0 370px;
   width: 370px;
   height: 100%;
@@ -10,22 +12,37 @@
   }
 
   &__photo {
-    background-color: #C16069;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
+    background-color: darken(#9C89CC, 10%);
     width: 100%;
     height: 220px;
     display: flex;
     align-items: flex-end;
-    border-radius: 4px 4px 0 0;
+
+    &--photo {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+
+    &--no-photo {
+      height: auto;
+
+      .omnibox__header {
+        background: transparent;
+        padding-top: 20px;
+      }
+
+      .omnibox__title {
+        text-shadow: none;
+      }
+    }
   }
 
   &__header {
     width: 100%;
     padding: 60px 20px 20px;
     color: #FFF;
-    background:  linear-gradient(to bottom, rgba(#000, 0), rgba(#000, 0.8));
+    background: linear-gradient(to bottom, rgba(#000, 0), rgba(#000, 0.8));
   }
 
   &__title {
@@ -78,24 +95,79 @@
 
 .omnibox-animation-enter {
   opacity: 0.01;
-  transform: scale(0.8) translate(20px, 20px);
 }
 
 .omnibox-animation-enter.omnibox-animation-enter-active {
   opacity: 1;
-  transition: 200ms;
-  transform: scale(1) translate(0, 0);
+  transition: 0.2s;
 }
 
 .omnibox-animation-leave {
   opacity: 1;
-  transform: scale(1) translate(0, 0);
 }
 
 .omnibox-animation-leave.omnibox-animation-leave-active {
   opacity: 0.01;
-  transition: 200ms;
-  transform: scale(0.8) translate(20px, 20px);
+  transition: 0.2s;
+}
+
+.omnibox__head {
+  background: darken(#9C89CC, 15%);
+  color: #FFF;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  flex: 0 0 50px;
+
+  &--back {
+    cursor: pointer;
+
+    &:hover {
+      background: darken(#9C89CC, 20%);
+    }
+
+    &:active {
+      background: darken(#9C89CC, 25%);
+    }
+  }
+}
+
+.omnibox__body {
+  position: relative;
+  flex: 1 1 auto;
+}
+
+.omnibox__slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 400%;
+  transform: translate3d(0, 0, 0);
+  transition: 0.2s;
+  display: flex;
+
+  &__slide {
+    width: 25%;
+    flex: 0 0 25%;
+  }
+
+  &--1 {
+    transform: translate3d(0, 0, 0);
+  }
+
+  &--2 {
+    transform: translate3d(-25%, 0, 0);
+  }
+
+  &--3 {
+    transform: translate3d(-50%, 0, 0);
+  }
+
+  &--4 {
+    transform: translate3d(-75%, 0, 0);
+  }
 }
 
 .omnibox__listings {

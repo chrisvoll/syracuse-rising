@@ -8,7 +8,6 @@ var OmniboxDetail = React.createClass({
 
   render() {
     var listing = this.props.listing;
-    if (!listing) return null;
 
     var style = {};
     if (listing.get('photo')) {
@@ -16,7 +15,7 @@ var OmniboxDetail = React.createClass({
     }
 
     return <div className="omnibox__detail">
-      <div className="omnibox__photo" style={style}>
+      <div className={'omnibox__photo omnibox__photo--' + (listing.get('photo') ? 'photo' : 'no-photo')} style={style}>
         <div className="omnibox__header">
           <div className="omnibox__title">
             {listing.get('name')}
@@ -46,7 +45,7 @@ var OmniboxDetail = React.createClass({
             Status
           </div>
           <div className="omnibox__details__row__value">
-            {listingEnum.status[listing.get('status')]}
+            {listingEnum.status[listing.get('status')]}{listing.get('year') ? ', ' + listing.get('year') : ''}
           </div>
         </div>
       </div>

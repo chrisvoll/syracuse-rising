@@ -8,6 +8,14 @@ import '../styles/Map.scss';
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3ZvbGwiLCJhIjoiNWYxYzJiMTU4NWM2MDRmNjgzMjcwZWI0Y2YxZmEyZWYifQ._j4hcQH-5ngUVb_lDFEoZg';
 
 var Map = React.createClass({
+  propTypes: {
+    listings: React.PropTypes.object,
+    hoveredListing: React.PropTypes.string,
+    selectedListing: React.PropTypes.string,
+    onHoverListing: React.PropTypes.func,
+    onSelectListing: React.PropTypes.func
+  },
+
   componentDidMount() {
     this.map = new mapboxgl.Map({
       container: ReactDOM.findDOMNode(this),
@@ -35,6 +43,10 @@ var Map = React.createClass({
     if (this.props.hoveredListing !== prevProps.hoveredListing) {
       this.setHovered(this.props.hoveredListing);
     }
+
+    if (this.props.selectedListing !== prevProps.selectedListing) {
+      this.setSelected(this.props.selectedListing);
+    }
   },
 
   plotListingsAfterEverythingIsLoaded() {
@@ -58,6 +70,16 @@ var Map = React.createClass({
     }
 
     this.map.getSource('markers-hovered').setData({
+      type: 'FeatureCollection',
+      features: geoJSON ? [geoJSON] : []
+    });
+  },
+
+  setSelected(id) {
+    var listing = this.props.listings.filter(l => l.get('id') === id).first();
+    var geoJSON = this.generateGeoJSON(listing);
+
+    this.map.getSource('markers-selected').setData({
       type: 'FeatureCollection',
       features: geoJSON ? [geoJSON] : []
     });
@@ -120,6 +142,11 @@ var Map = React.createClass({
       data: { type: 'FeatureCollection', features: [] }
     });
 
+    this.map.addSource('markers-selected', {
+      type: 'geojson',
+      data: { type: 'FeatureCollection', features: [] }
+    });
+
     var color = {
       property: 'type',
       type: 'categorical',
@@ -160,11 +187,20 @@ var Map = React.createClass({
 
     this.map.addLayer({
       id: 'markers-hovered',
-      interactive: false,
       type: 'circle',
       source: 'markers-hovered',
       paint: {
         'circle-radius': 12,
+        'circle-color': color
+      }
+    });
+
+    this.map.addLayer({
+      id: 'markers-selected',
+      type: 'circle',
+      source: 'markers-selected',
+      paint: {
+        'circle-radius': 14,
         'circle-color': color
       }
     });
