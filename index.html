@@ -8,9 +8,8 @@
     <script src="//use.typekit.net/tmh8mxl.js"></script>
     <script>try{Typekit.load();}catch(e){}</script>
 
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.13.1/mapbox-gl.js'></script>
     <link rel="stylesheet" href="style.css?113014">
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.13.1/mapbox-gl.css' rel='stylesheet' />
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css' rel='stylesheet' />
   </head>
 
   <body>
@@ -185,116 +184,6 @@
       <div class="parallax" style="margin-bottom: 0">
         <div class="parallax-image" style="background-image: url(./assets/downtown.jpg);"></div>
         <div class="cutline"><strong>Downtown Syracuse</strong>, viewed from University Hill in 2012 sitting beyond the I-81 viaduct that divides the two neighborhoods.</div>
-      </div>
-
-
-
-
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-
-
-
-    <!-- - - - - - -->
-    <!-- Templates -->
-    <!-- - - - - - -->
-
-      <div class="templates">
-
-        <script id="details-template" type="text/x-handlebars-template">
-
-          {{#if photo }}
-          <div class="details-header with-photo" style="background-image: url(https://dl.dropboxusercontent.com/u/21879/syracuse/{{ photo }});">
-          {{else}}
-          <div class="details-header without-photo">
-          {{/if}}
-
-            <div class="details-header-inner">
-              {{#if details}}
-                <h2><a href="{{ details }}">{{ name }}</a></h2>
-              {{else}}
-                <h2>{{ name }}</h2>
-              {{/if}}
-
-              <div class="details-meta">
-                <span class="point-type" style="background-color: {{ typeData.marker-color }};">
-                  {{ typeData.label }}
-                </span>
-                {{#if cost}}
-                   &nbsp; ${{ formattedCost }}
-                {{/if}}
-              </div>
-            </div>
-
-          </div>
-
-          {{#if description}}
-            <div class="details-description">
-              {{ description }}
-            </div>
-          {{/if}}
-
-          <table class="details-table">
-            <tbody>
-              {{#if status}}
-                <tr>
-                  <th>Status</th>
-                  <td class="status status-{{ status }}">{{ statusLabel }}</td>
-                </tr>
-              {{/if}}
-              {{#if neighborhood}}
-                <tr>
-                  <th>Neighborhood</th>
-                  <td>{{ neighborhood }}</td>
-                </tr>
-              {{/if}}
-              {{#if developer}}
-                <tr>
-                  <th>Developer</th>
-                  <td>{{ developer }}</td>
-                </tr>
-              {{/if}}
-              {{#if tenants}}
-                <tr>
-                  <th>Tenants</th>
-                  <td>{{ tenants }}</td>
-                </tr>
-              {{/if}}
-              {{#if year}}
-                <tr>
-                  <th>Completion</th>
-                  <td>{{ year }}</td>
-                </tr>
-              {{/if}}
-              {{#if originyear}}
-                <tr>
-                  <th>Originally Built</th>
-                  <td>{{ originyear }}</td>
-                </tr>
-              {{/if}}
-              {{#if sqft}}
-                <tr>
-                  <th>Square Feet</th>
-                  <td>{{ sqft }}</td>
-                </tr>
-              {{/if}}
-              {{#if units}}
-                <tr>
-                  <th>Housing Units</th>
-                  <td>{{ units }}</td>
-                </tr>
-              {{/if}}
-              {{#if stories}}
-                <tr>
-                  <th>Floors</th>
-                  <td>{{ stories }}</td>
-                </tr>
-              {{/if}}
-            </tbody>
-          </table>
-
-        </script>
-
       </div>
 
 

@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var path = require('path');
 
 module.exports = {
   entry: [
@@ -11,6 +12,12 @@ module.exports = {
     publicPath: "/output/",
     filename: "bundle.js"
   },
+  resolve: {
+    alias: {
+      // For Mapbox-GL-JS
+      'webworkify': 'webworkify-webpack'
+    }
+  },
   module: {
     loaders: [
       {
@@ -21,8 +28,24 @@ module.exports = {
       {
         test: /\.scss$/,
         loaders: ["style", "css", "sass"]
+      },
+
+      // Loaders for Mapbox-GL-JS
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
+      },
+      {
+        test: /\.js$/,
+        include: path.resolve('node_modules/mapbox-gl-shaders/index.js'),
+        loader: 'transform/cacheable?brfs'
       }
-    ]
+    ],
+    postLoaders: [{
+      include: /node_modules\/mapbox-gl-shaders/,
+      loader: 'transform',
+      query: 'brfs'
+    }]
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()

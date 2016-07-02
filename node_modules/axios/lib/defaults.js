@@ -1,42 +1,45 @@
 'use strict';
 
 var utils = require('./utils');
+var normalizeHeaderName = require('./helpers/normalizeHeaderName');
 
 var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
 };
 
+function setContentTypeIfUnset(headers, value) {
+  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
+    headers['Content-Type'] = value;
+  }
+}
+
 module.exports = {
-  transformRequest: [function transformResponseJSON(data, headers) {
-    if (utils.isFormData(data)) {
-      return data;
-    }
-    if (utils.isArrayBuffer(data)) {
+  transformRequest: [function transformRequest(data, headers) {
+    normalizeHeaderName(headers, 'Content-Type');
+    if (utils.isFormData(data) ||
+      utils.isArrayBuffer(data) ||
+      utils.isStream(data) ||
+      utils.isFile(data) ||
+      utils.isBlob(data)
+    ) {
       return data;
     }
     if (utils.isArrayBufferView(data)) {
       return data.buffer;
     }
-    if (utils.isObject(data) && !utils.isFile(data) && !utils.isBlob(data)) {
-      // Set application/json if no Content-Type has been specified
-      if (!utils.isUndefined(headers)) {
-        utils.forEach(headers, function processContentTypeHeader(val, key) {
-          if (key.toLowerCase() === 'content-type') {
-            headers['Content-Type'] = val;
-          }
-        });
-
-        if (utils.isUndefined(headers['Content-Type'])) {
-          headers['Content-Type'] = 'application/json;charset=utf-8';
-        }
-      }
+    if (utils.isURLSearchParams(data)) {
+      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
+      return data.toString();
+    }
+    if (utils.isObject(data)) {
+      setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
       return JSON.stringify(data);
     }
     return data;
   }],
 
-  transformResponse: [function transformResponseJSON(data) {
+  transformResponse: [function transformResponse(data) {
     /*eslint no-param-reassign:0*/
     if (typeof data === 'string') {
       data = data.replace(PROTECTION_PREFIX, '');
@@ -59,5 +62,11 @@ module.exports = {
   timeout: 0,
 
   xsrfCookieName: 'XSRF-TOKEN',
-  xsrfHeaderName: 'X-XSRF-TOKEN'
+  xsrfHeaderName: 'X-XSRF-TOKEN',
+
+  maxContentLength: -1,
+
+  validateStatus: function validateStatus(status) {
+    return status >= 200 && status < 300;
+  }
 };
