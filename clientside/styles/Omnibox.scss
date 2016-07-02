@@ -3,13 +3,9 @@
   flex-direction: column;
   flex: 0 0 370px;
   width: 370px;
-  height: 100%;
+  min-height: 100%;
   background: #FFF;
   font-family: proxima-nova, arial, helvetica, sans-serif;
-
-  &, * {
-    box-sizing: border-box;
-  }
 
   &__photo {
     background-color: darken(#9C89CC, 10%);
@@ -79,15 +75,50 @@
     padding: 20px;
 
     &__row {
+      margin: 0 0 15px;
+
       &__key {
-        color: #555;
+        color: #777;
         font-size: 13px;
         margin: 0 0 5px;
       }
 
       &__value {
-        font-size: 17px;
-        color: #111;
+        font-size: 15px;
+        color: #333;
+      }
+    }
+
+    &__tag {
+      font-size: 13px;
+      display: inline-block;
+      background: #EFEFEF;
+      border-radius: 2px;
+      color: #555;
+      padding: 3px 7px;
+      margin-right: 4px;
+    }
+
+    &__source {
+      color: #777;
+      text-decoration: none;
+      display: block;
+      border: 1px solid #DDD;
+      border-radius: 3px;
+      text-align: center;
+      padding: 10px 0;
+      margin-top: 20px;
+      font-size: 13px;
+      transition: 0.2s;
+
+      &:hover {
+        color: #9C89CC;
+        border-color: #9C89CC;
+      }
+
+      &:active {
+        color: darken(#9C89CC, 15%);
+        border-color: darken(#9C89CC, 15%);
       }
     }
   }

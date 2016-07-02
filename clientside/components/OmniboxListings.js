@@ -10,7 +10,7 @@ var OmniboxListings = React.createClass({
   },
 
   render() {
-    return <div className="omnibox__listings" onMouseLeave={() => this.props.onHoverListing()}>
+    return <div className="omnibox__listings">
       {this.props.listings.map(listing => {
         return <OmniboxListing
                   listing={listing}

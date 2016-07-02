@@ -1,22 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Immutable from 'immutable';
-import listingEnum from '../helpers/listingEnum';
 import mapboxgl from 'mapbox-gl';
-import '../styles/Map.scss';
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiY3ZvbGwiLCJhIjoiNWYxYzJiMTU4NWM2MDRmNjgzMjcwZWI0Y2YxZmEyZWYifQ._j4hcQH-5ngUVb_lDFEoZg';
+import listingEnum from '../helpers/listingEnum';
+import '../styles/Map.scss';
 
 var Map = React.createClass({
   propTypes: {
     listings: React.PropTypes.object,
     hoveredListing: React.PropTypes.string,
     selectedListing: React.PropTypes.string,
+
     onHoverListing: React.PropTypes.func,
     onSelectListing: React.PropTypes.func
   },
 
   componentDidMount() {
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY3ZvbGwiLCJhIjoiNWYxYzJiMTU4NWM2MDRmNjgzMjcwZWI0Y2YxZmEyZWYifQ._j4hcQH-5ngUVb_lDFEoZg';
+
     this.map = new mapboxgl.Map({
       container: ReactDOM.findDOMNode(this),
       style: 'mapbox://styles/mapbox/streets-v8',
@@ -26,13 +28,13 @@ var Map = React.createClass({
     });
 
     this.map.on('load', this.plotListingsAfterEverythingIsLoaded);
+    this.map.on('click', this.handleClick);
+    this.map.on('mousemove', this.handleMouseMove);
 
     this.popup = new mapboxgl.Popup({
       closeButton: false,
       closeOnClick: false
     });
-
-    this.loadCount = 0;
   },
 
   componentDidUpdate(prevProps) {
@@ -49,17 +51,8 @@ var Map = React.createClass({
     }
   },
 
-  plotListingsAfterEverythingIsLoaded() {
-    this.loadCount++;
-    if (this.loadCount < 2) return;
-
-    this.plotListings(this.props.listings);
-  },
-
   setHovered(id) {
-    var listing = this.props.listings.filter(l => l.get('id') === id).first();
-    var geoJSON = this.generateGeoJSON(listing);
-
+    var { listing, geoJSON } = this.setMarker('hovered', id);
     if (listing && geoJSON) {
       this.popup
         .setLngLat(geoJSON.geometry.coordinates)
@@ -68,21 +61,23 @@ var Map = React.createClass({
     } else {
       this.popup.remove();
     }
-
-    this.map.getSource('markers-hovered').setData({
-      type: 'FeatureCollection',
-      features: geoJSON ? [geoJSON] : []
-    });
   },
 
   setSelected(id) {
+    this.setMarker('selected', id);
+  },
+
+  setMarker(type, id) {
+    if (!this.initialized) return {};
     var listing = this.props.listings.filter(l => l.get('id') === id).first();
     var geoJSON = this.generateGeoJSON(listing);
 
-    this.map.getSource('markers-selected').setData({
+    this.map.getSource('markers-' + type).setData({
       type: 'FeatureCollection',
       features: geoJSON ? [geoJSON] : []
     });
+
+    return { listing, geoJSON };
   },
 
   costBucket(cost) {
@@ -92,7 +87,7 @@ var Map = React.createClass({
       return 'radius-4';
     } else if (dollars < 5 * mil) {
       return 'radius-5';
-    } else if (dollars < 10 * mil) {
+    } else if (dollars < 10 * mil || !cost) {
       return 'radius-6';
     } else if (dollars < 30 * mil) {
       return 'radius-7';
@@ -108,9 +103,7 @@ var Map = React.createClass({
   },
 
   generateGeoJSON(listing) {
-    if (!listing) {
-      return;
-    }
+    if (!listing) return;
 
     return {
       type: 'Feature',
@@ -126,26 +119,32 @@ var Map = React.createClass({
     };
   },
 
+  plotListingsAfterEverythingIsLoaded() {
+    this.loadCount = (this.loadCount || 0) + 1;
+    if (this.loadCount < 2) return;
+
+    this.plotListings(this.props.listings);
+  },
+
   plotListings(listings) {
-    const markers = {
+    this.initializeSources();
+    this.map.getSource('markers').setData({
       type: 'FeatureCollection',
       features: listings.map(this.generateGeoJSON).toJS()
+    });
+  },
+
+  initializeSources() {
+    if (this.initialized) return;
+    this.initialized = true;
+
+    var emptySource = () => {
+      return { type: 'geojson', data: { type: 'FeatureCollection', features: [] } };
     };
 
-    this.map.addSource('markers', {
-      type: 'geojson',
-      data: markers
-    });
-
-    this.map.addSource('markers-hovered', {
-      type: 'geojson',
-      data: { type: 'FeatureCollection', features: [] }
-    });
-
-    this.map.addSource('markers-selected', {
-      type: 'geojson',
-      data: { type: 'FeatureCollection', features: [] }
-    });
+    this.map.addSource('markers', emptySource());
+    this.map.addSource('markers-hovered', emptySource());
+    this.map.addSource('markers-selected', emptySource());
 
     var color = {
       property: 'type',
@@ -204,17 +203,10 @@ var Map = React.createClass({
         'circle-color': color
       }
     });
-
-    this.map.on('click', this.handleClick);
-    this.map.on('mousemove', this.handleMouseMove);
   },
 
   featuresAtEvent(e, callback) {
-    var features = this.map.queryRenderedFeatures(e.point, {
-      layers: ['markers']
-    });
-
-    callback(features);
+    callback(this.map.queryRenderedFeatures(e.point, { layers: ['markers'] }));
   },
 
   handleClick(e) {
@@ -240,12 +232,7 @@ var Map = React.createClass({
   },
 
   render() {
-    var className = 'map';
-    if (this.props.hoveredListing) {
-      className = 'map map--hovered';
-    }
-
-    return <div className={className} />;
+    return <div className={'map' + (this.props.hoveredListing ? ' map--hovered' : '')} />;
   }
 });
 

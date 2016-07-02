@@ -13,7 +13,12 @@ var App = React.createClass({
   },
 
   render() {
-    return <div>
+    return <div className="app">
+      <div className="app__header">
+        <div className="app__header__logo">
+          <strong>Syracuse</strong> Rising
+        </div>
+      </div>
       <div className="map-container">
         <OmniboxContainer />
         <MapContainer />

@@ -1,9 +1,10 @@
 .map {
   flex: 1 1 auto;
-  height: 100%;
+  min-height: 100%;
   position: relative;
 
-  &--hovered {
+  &--hovered .mapboxgl-canvas-container.mapboxgl-interactive,
+  &--hovered .mapboxgl-canvas-container.mapboxgl-interactive:active {
     cursor: pointer;
   }
 }
@@ -16,9 +17,13 @@
 }
 
 .mapboxgl-canvas-container.mapboxgl-interactive {
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
   cursor: grab;
 }
 .mapboxgl-canvas-container.mapboxgl-interactive:active {
+  cursor: -webkit-grabbing;
+  cursor: -moz-grabbing;
   cursor: grabbing;
 }
 
