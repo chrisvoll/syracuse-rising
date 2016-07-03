@@ -63,7 +63,25 @@ var Map = React.createClass({
   },
 
   setSelected(id) {
-    this.setMarker('selected', id);
+    var { geoJSON } = this.setMarker('selected', id);
+    var zoom = this.map.getZoom();
+    if (geoJSON && !this.stored) {
+      this.stored = {
+        center: this.map.getCenter(),
+        zoom
+      };
+    }
+
+    if (geoJSON) {
+      var params = {
+        center: geoJSON.geometry.coordinates
+      };
+      if (zoom !== 15) params.zoom = 15;
+      this.map.flyTo(params);
+    } else if (this.stored) {
+      this.map.flyTo(this.stored);
+      this.stored = null;
+    }
   },
 
   setMarker(type, id) {

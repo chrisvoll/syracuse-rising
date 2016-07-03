@@ -4,17 +4,8 @@ import { selectListing,
 import Map from '../components/Map';
 
 const mapStateToProps = (state) => {
-  var listings = state.get('listings').sort((a, b) => b.get('cost') - a.get('cost'));
-
-  var filterKey = state.get('filterKey');
-  var filterValue = state.get('filterValue');
-
-  if (filterKey && filterKey !== 'all') {
-    listings = listings.filter(l => l.get(filterKey) === filterValue);
-  }
-
   return {
-    listings,
+    listings: state.get('listings'),
     selectedListing: state.get('selectedListing'),
     hoveredListing: state.get('hoveredListing')
   };

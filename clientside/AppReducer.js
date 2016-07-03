@@ -8,7 +8,8 @@ import {
 } from './AppActions';
 
 const defaultState = Immutable.fromJS({
-  listings: [],
+  rawListings: [],
+  listings: [], // filtered, sorted
   stats: {},
   selectedListing: null,
   hoveredListing: null,
@@ -20,6 +21,7 @@ const defaultState = Immutable.fromJS({
 const store = (state = defaultState, action) => {
   switch (action.type) {
   case LOADED_SERVER_DATA:
+    state = state.set('rawListings', action.data);
     state = state.set('listings', action.data);
     state = state.set('stats', action.stats);
     break;
@@ -33,8 +35,17 @@ const store = (state = defaultState, action) => {
     state = state.set('selectedListing', null);
     break;
   case SET_FILTER:
+    if (state.get('filterKey') === action.key && state.get('filterValue') === action.value) break;
     state = state.set('filterKey', action.key);
     state = state.set('filterValue', action.value);
+
+    var listings = state.get('rawListings');
+    if (action.key && action.key !== 'all') {
+      listings = listings.filter(l => l.get(action.key) === action.value);
+    }
+    listings = listings.sort((a, b) => b.get('cost') - a.get('cost'));
+    state = state.set('listings', listings);
+    break;
   }
 
   return state;

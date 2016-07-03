@@ -43,9 +43,11 @@ var OmniboxListing = React.createClass({
           {listing.get('neighborhood')}
         </div>
 
-        <div className="omnibox__listing__cost">
-          {util.shortenCost(listing.get('cost'))}
-        </div>
+        {!!listing.get('cost') &&
+          <div className="omnibox__listing__cost">
+            {util.shortenCost(listing.get('cost'))}
+          </div>
+        }
       </div>
 
       {listing.get('photo') &&

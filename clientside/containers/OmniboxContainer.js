@@ -12,21 +12,12 @@ const mapStateToProps = (state) => {
     selectedListing = selectedListings.first();
   }
 
-  var listings = state.get('listings').sort((a, b) => b.get('cost') - a.get('cost'));
-
-  var filterKey = state.get('filterKey');
-  var filterValue = state.get('filterValue');
-
-  if (filterKey && filterKey !== 'all') {
-    listings = listings.filter(l => l.get(filterKey) === filterValue);
-  }
-
   return {
     selectedListing,
-    listings,
+    listings: state.get('listings'),
     stats: state.get('stats'),
-    filterKey,
-    filterValue
+    filterKey: state.get('filterKey'),
+    filterValue: state.get('filterValue')
   };
 };
 
