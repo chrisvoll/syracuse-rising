@@ -5,17 +5,19 @@ export const loadServerData = () => {
     axios
       .get('https://spreadsheets.google.com/feeds/list/19JnF3xjfnGSLN0Gzoh-Gw2pNfbQVJYGq7XzZMYfMK-Q/od6/public/values?alt=json')
       .then(response => {
-        let listings = response.data.feed.entry.map(listing => {
-          let newListing = {};
+        let listings = response.data.feed.entry
+          .map(listing => {
+            let newListing = {};
 
-          for (var i in listing) {
-            if (i.indexOf('gsx$') !== -1) {
-              newListing[i.replace('gsx$', '')] = listing[i]['$t'];
+            for (var i in listing) {
+              if (i.indexOf('gsx$') !== -1) {
+                newListing[i.replace('gsx$', '')] = listing[i]['$t'];
+              }
             }
-          }
 
-          return newListing;
-        });
+            return newListing;
+          })
+          .filter(l => l.status !== 'canceled');
 
         dispatch(loadedServerData(listings));
       })

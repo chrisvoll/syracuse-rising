@@ -23,8 +23,7 @@ var Map = React.createClass({
       container: ReactDOM.findDOMNode(this),
       style: 'mapbox://styles/mapbox/streets-v8',
       center: [-76.1486941, 43.0476822],
-      zoom: 12.4,
-      pitch: 30
+      zoom: 12.4
     });
 
     this.map.on('load', this.plotListingsAfterEverythingIsLoaded);

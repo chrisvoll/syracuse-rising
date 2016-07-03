@@ -70,13 +70,15 @@ var OmniboxDetail = React.createClass({
         {this.detail('Status', null, listingEnum.status[listing.get('status')] + (listing.get('year') ? ', ' + listing.get('year') : ''))}
         {this.detail('Developer', 'developer')}
         {this.detail('Tenants', 'tenants')}
-        {this.detail('Location', 'location')}
+        {this.detail('Address', 'location')}
+        {this.detail('Neighborhood', 'neighborhood')}
 
         {this.tag('sqft', '{value} sqft')}
         {this.tag('jobs', '{value} jobs')}
         {this.tag('stories', '{value} stories')}
         {this.tag('units', '{value} units')}
         {this.tag('originalyear', 'built in {value}')}
+        {this.tag('updated', 'updated {value}')}
 
         {listing.get('details') &&
           <a className="omnibox__details__source" href={listing.get('details')} target="_blank">

@@ -49,10 +49,12 @@
 .mapboxgl-popup-anchor-left {
   flex-direction: row;
   left: 7px;
+  top: 0;
 }
 .mapboxgl-popup-anchor-right {
   flex-direction: row-reverse;
   left: -7px;
+  top: 0;
 }
 .mapboxgl-popup-tip {
   width: 0;
