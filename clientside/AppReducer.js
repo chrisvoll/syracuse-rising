@@ -15,18 +15,21 @@ const defaultState = Immutable.fromJS({
   selectedListing: null,
   hoveredListing: null,
 
-  filterKey: null, // neighborhood|type
+  filterKey: 'all', // neighborhood|type
   filterValue: null, // Downtown|etc.
 
   searchQuery: ''
 });
 
+const sortFn = (a, b) => b.get('cost') - a.get('cost');
+
 const store = (state = defaultState, action) => {
   switch (action.type) {
 
   case LOADED_SERVER_DATA:
-    state = state.set('rawListings', action.data);
-    state = state.set('listings', action.data);
+    var listings = action.data.sort(sortFn);
+    state = state.set('rawListings', listings);
+    state = state.set('listings', listings);
     state = state.set('stats', action.stats);
     break;
 
@@ -46,12 +49,13 @@ const store = (state = defaultState, action) => {
     if (state.get('filterKey') === action.key && state.get('filterValue') === action.value) break;
     state = state.set('filterKey', action.key);
     state = state.set('filterValue', action.value);
+    state = state.set('searchQuery', '');
 
     var listings = state.get('rawListings');
     if (action.key && action.key !== 'all') {
       listings = listings.filter(l => l.get(action.key) === action.value);
     }
-    listings = listings.sort((a, b) => b.get('cost') - a.get('cost'));
+
     state = state.set('listings', listings);
     break;
 
@@ -62,12 +66,11 @@ const store = (state = defaultState, action) => {
     state = state.set('selectedListing', null);
 
     var listings = state.get('rawListings');
+    var query = action.query.toLowerCase();
 
     if (action.query) {
-      listings = listings.filter(l => l.get('name', '').toLowerCase().indexOf(action.query.toLowerCase()) >= 0);
+      listings = listings.filter(l => l.get('name', '').toLowerCase().indexOf(query) >= 0 || l.get('description', '').toLowerCase().indexOf(query) >= 0);
     }
-
-    listings = listings.sort((a, b) => b.get('cost') - a.get('cost'));
 
     state = state.set('searchQuery', action.query);
     state = state.set('listings', listings);
