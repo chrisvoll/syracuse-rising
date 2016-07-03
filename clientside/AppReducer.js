@@ -59,6 +59,7 @@ const store = (state = defaultState, action) => {
     if (state.get('searchQuery') === action.query) break;
     state = state.set('filterKey', 'all');
     state = state.set('filterValue', null);
+    state = state.set('selectedListing', null);
 
     var listings = state.get('rawListings');
 
