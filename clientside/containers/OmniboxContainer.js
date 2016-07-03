@@ -17,7 +17,8 @@ const mapStateToProps = (state) => {
     listings: state.get('listings'),
     stats: state.get('stats'),
     filterKey: state.get('filterKey'),
-    filterValue: state.get('filterValue')
+    filterValue: state.get('filterValue'),
+    searchQuery: state.get('searchQuery')
   };
 };
 

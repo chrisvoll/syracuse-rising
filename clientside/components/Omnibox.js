@@ -13,6 +13,7 @@ var Omnibox = React.createClass({
     selectedListing: React.PropTypes.object,
     filterKey: React.PropTypes.string,
     filterValue: React.PropTypes.string,
+    searchQuery: React.PropTypes.string,
 
     onHoverListing: React.PropTypes.func,
     onSelectListing: React.PropTypes.func,
@@ -70,7 +71,7 @@ var Omnibox = React.createClass({
 
       {!this.canGoBack() &&
         <div className="omnibox__head">
-          All Projects
+          Overview
         </div>
       }
 
@@ -88,7 +89,8 @@ var Omnibox = React.createClass({
               listings={this.props.listings}
               onHoverListing={this.props.onHoverListing}
               onSelectListing={this.props.onSelectListing}
-              filterValue={this.props.filterValue} />
+              filterValue={this.props.filterValue}
+              searchQuery={this.props.searchQuery} />
           </div>
 
           <div className="omnibox__slider__slide">

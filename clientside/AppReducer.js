@@ -57,6 +57,8 @@ const store = (state = defaultState, action) => {
 
   case SET_SEARCH:
     if (state.get('searchQuery') === action.query) break;
+    state = state.set('filterKey', 'all');
+    state = state.set('filterValue', null);
 
     var listings = state.get('rawListings');
 
