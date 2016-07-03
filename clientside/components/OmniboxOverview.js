@@ -1,7 +1,6 @@
 import React from 'react';
 import Immutable from 'immutable';
 import util from '../util';
-import listingEnum from '../helpers/listingEnum';
 
 var OmniboxOverview = React.createClass({
   propTypes: {
@@ -30,7 +29,7 @@ var OmniboxOverview = React.createClass({
     return <div className="omnibox__overview">
 
       {this.label('Get Started')}
-      {this.item('All Projects', 'all')}
+      {this.item('All Projects', 'all', null, this.props.stats.get('total'))}
 
       {this.label('Neighborhoods')}
       {this.props.stats.get('neighborhoods', Immutable.Map()).sort((a, b) => b - a).map((v, k) => {
@@ -39,7 +38,7 @@ var OmniboxOverview = React.createClass({
 
       {this.label('Types')}
       {this.props.stats.get('types', Immutable.Map()).sort((a, b) => b - a).map((v, k) => {
-        return this.item(listingEnum.types[k].label, 'type', k, v);
+        return this.item(k, 'prettyType', k, v);
       }).valueSeq()}
 
     </div>

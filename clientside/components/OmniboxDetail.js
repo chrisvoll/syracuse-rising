@@ -1,5 +1,6 @@
 import React from 'react';
 import listingEnum from '../helpers/listingEnum';
+import util from '../util';
 
 var OmniboxDetail = React.createClass({
   propTypes: {
@@ -33,7 +34,7 @@ var OmniboxDetail = React.createClass({
 
     var style = {};
     if (listing.get('photo')) {
-      style.backgroundImage = 'url(https://dl.dropboxusercontent.com/u/21879/syracuse/' + listing.get('photo') + ')';
+      style.backgroundImage = util.imageUrl(listing.get('photo'));
     }
 
     return <div className="omnibox__detail">
@@ -49,14 +50,12 @@ var OmniboxDetail = React.createClass({
           <div
             className="omnibox__type"
             style={{ background: listingEnum.types[listing.get('type')]['marker-color'] }}>
-            {listingEnum.types[listing.get('type')].label}
+            {listing.get('prettyType')}
           </div>
 
-          {listing.get('cost') &&
-            <div className="omnibox__cost">
-              ${listing.get('cost')}
-            </div>
-          }
+          <div className="omnibox__cost">
+            {util.formatCost(listing.get('cost'))}
+          </div>
         </div>
       </div>
 

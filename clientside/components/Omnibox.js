@@ -87,7 +87,8 @@ var Omnibox = React.createClass({
             <OmniboxListings
               listings={this.props.listings}
               onHoverListing={this.props.onHoverListing}
-              onSelectListing={this.props.onSelectListing} />
+              onSelectListing={this.props.onSelectListing}
+              filterValue={this.props.filterValue} />
           </div>
 
           <div className="omnibox__slider__slide">

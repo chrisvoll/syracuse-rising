@@ -1,5 +1,12 @@
 @import './common.scss';
 
+@mixin omnibox-panel {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 .omnibox {
   display: flex;
   flex-direction: column;
@@ -7,7 +14,8 @@
   width: 370px;
   min-height: 100%;
   background: #FFF;
-  font-family: proxima-nova, arial, helvetica, sans-serif;
+  font-family: $font-family;
+  overflow: hidden;
 
   &__photo {
     background-color: darken(#9C89CC, 10%);
@@ -203,9 +211,7 @@
 }
 
 .omnibox__overview {
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
+  @include omnibox-panel;
 
   &__label {
     @include label;
@@ -231,10 +237,7 @@
 }
 
 .omnibox__listings {
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
+  @include omnibox-panel;
 }
 
 .omnibox__listing {
@@ -280,4 +283,8 @@
     background-repeat: norepeat;
     flex: 0 0 100px;
   }
+}
+
+.omnibox__detail {
+  @include omnibox-panel;
 }

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Immutable from 'immutable';
 import util from './util';
+import listingEnum from './helpers/listingEnum';
 
 export const loadServerData = () => {
   return dispatch => {
@@ -9,6 +10,7 @@ export const loadServerData = () => {
       .then(response => {
         var neighborhoods = {};
         var types = {};
+        var total = 0;
 
         var listings = response.data.feed.entry
           .map(listing => {
@@ -21,15 +23,17 @@ export const loadServerData = () => {
             }
 
             newListing.cost = util.normalizeCost(newListing.cost);
+            newListing.prettyType = listingEnum.types[newListing.type].label;
 
             neighborhoods[newListing.neighborhood] = (neighborhoods[newListing.neighborhood] || 0) + newListing.cost;
-            types[newListing.type] = (types[newListing.type] || 0) + newListing.cost;
+            types[newListing.prettyType] = (types[newListing.prettyType] || 0) + newListing.cost;
+            total += newListing.cost;
 
             return newListing;
           })
           .filter(l => l.status !== 'canceled');
 
-        dispatch(loadedServerData(Immutable.fromJS(listings), Immutable.fromJS({ neighborhoods, types })));
+        dispatch(loadedServerData(Immutable.fromJS(listings), Immutable.fromJS({ neighborhoods, types, total })));
       })
       .catch(error => {
         console.error('error loading listings', error);

@@ -8,7 +8,7 @@ function normalizeCost(cost) {
 // 10,000,000 -> $10000000
 function formatCost(cost) {
   if (!cost) return null;
-  return '$' + normalizeCost(cost);
+  return '$' + commarizeCost(normalizeCost(cost));
 }
 
 // 10,000,000,000 -> $10b
@@ -31,8 +31,19 @@ function shortenCost(cost) {
   return (cost ? '$' : '') + cost;
 }
 
+// <int>1000000 -> <str>1,000,000
+function commarizeCost(cost) {
+  return cost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function imageUrl(url) {
+  return 'url(https://dl.dropboxusercontent.com/u/21879/syracuse/' + url + ')';
+}
+
 export default {
   normalizeCost,
   formatCost,
-  shortenCost
+  shortenCost,
+  commarizeCost,
+  imageUrl
 };
