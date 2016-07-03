@@ -141,6 +141,19 @@ var Map = React.createClass({
       type: 'FeatureCollection',
       features: listings.map(this.generateGeoJSON).toJS()
     });
+
+    // Zoom to fit all the listings
+    if (this.loadCount === 2) return; // but not for initial load
+    var lat = listings.filter(l => l.get('lat')).map(l => parseFloat(l.get('lat')));
+    var lon = listings.filter(l => l.get('lon')).map(l => parseFloat(l.get('lon')));
+
+    var buffer = 0.002;
+    var bounds = [
+      [lon.min() - buffer, lat.min() - buffer],
+      [lon.max() + buffer, lat.max() + buffer]
+    ];
+
+    this.map.fitBounds(bounds, { speed: 1.8 });
   },
 
   initializeSources() {
