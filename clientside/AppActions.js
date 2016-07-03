@@ -81,3 +81,11 @@ export const setFilter = (key, value) => {
     value
   };
 };
+
+export const SET_SEARCH = 'SET_SEARCH';
+export const setSearch = (query) => {
+  return {
+    type: SET_SEARCH,
+    query
+  };
+};

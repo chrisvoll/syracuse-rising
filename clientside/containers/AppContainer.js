@@ -1,15 +1,21 @@
 import { connect } from 'react-redux';
 import App from '../components/App';
-import { loadServerData } from '../AppActions';
+import { loadServerData,
+         setSearch } from '../AppActions';
 
 const mapStateToProps = (state) => {
-  return {};
+  return {
+    searchQuery: state.get('searchQuery')
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     loadServerData: () => {
       dispatch(loadServerData());
+    },
+    onSetSearch: (query) => {
+      dispatch(setSearch(query));
     }
   };
 };
