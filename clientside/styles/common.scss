@@ -1,0 +1,26 @@
+$purple-light: #9C89CC;
+$purple: #6F54B5;
+$purple-dark: darken($purple, 10%);
+$purple-nav: darken($purple, 15%);
+$purple-darkest: darken($purple, 20%);
+
+$border: #DDD;
+$background: #EFEFEF;
+
+$font-family: Proxima Nova, Helvetica, Arial, sans-serif;
+
+@mixin label {
+  color: #777;
+  font-size: 13px;
+  margin: 0 0 5px;
+}
+
+@mixin hoverable {
+  transition: 0.2s;
+  cursor: pointer;
+  border-bottom: 1px solid $border;
+
+  &:hover {
+    background: $background;
+  }
+}

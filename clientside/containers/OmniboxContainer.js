@@ -1,11 +1,8 @@
 import { connect } from 'react-redux';
 import { selectListing,
-         hoverListing } from '../AppActions';
+         hoverListing,
+         setFilter } from '../AppActions';
 import Omnibox from '../components/Omnibox';
-
-function intCost(cost) {
-  return parseInt(cost.replace(/,/g, '') || 0, 10);
-}
 
 const mapStateToProps = (state) => {
   let selectedListing = null;
@@ -15,9 +12,21 @@ const mapStateToProps = (state) => {
     selectedListing = selectedListings.first();
   }
 
+  var listings = state.get('listings').sort((a, b) => b.get('cost') - a.get('cost'));
+
+  var filterKey = state.get('filterKey');
+  var filterValue = state.get('filterValue');
+
+  if (filterKey && filterKey !== 'all') {
+    listings = listings.filter(l => l.get(filterKey) === filterValue);
+  }
+
   return {
     selectedListing,
-    listings: state.get('listings').sort((a, b) => intCost(b.get('cost')) - intCost(a.get('cost')))
+    listings,
+    stats: state.get('stats'),
+    filterKey,
+    filterValue
   };
 };
 
@@ -28,6 +37,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     onSelectListing: (id) => {
       dispatch(selectListing(id));
+    },
+    onSetFilter: (key, value) => {
+      dispatch(setFilter(key, value));
     }
   };
 };

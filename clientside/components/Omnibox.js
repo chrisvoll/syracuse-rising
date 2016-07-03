@@ -1,17 +1,22 @@
 import React from 'react';
 import Animation from 'react-addons-css-transition-group';
-import OmniboxDetail from './OmniboxDetail';
+import OmniboxOverview from './OmniboxOverview';
 import OmniboxListings from './OmniboxListings';
+import OmniboxDetail from './OmniboxDetail';
 
 import '../styles/Omnibox.scss';
 
 var Omnibox = React.createClass({
   propTypes: {
     listings: React.PropTypes.object,
+    stats: React.PropTypes.object,
     selectedListing: React.PropTypes.object,
+    filterKey: React.PropTypes.string,
+    filterValue: React.PropTypes.string,
 
     onHoverListing: React.PropTypes.func,
-    onSelectListing: React.PropTypes.func
+    onSelectListing: React.PropTypes.func,
+    onSetFilter: React.PropTypes.func
   },
 
   componentDidMount() {
@@ -29,19 +34,37 @@ var Omnibox = React.createClass({
   },
 
   canGoBack() {
-    return !!this.props.selectedListing;
+    return this.props.selectedListing || this.props.filterKey;
   },
 
   goBack() {
-    this.props.onSelectListing();
+    var state = this.getSlideState();
+
+    if (state === 2) {
+      this.props.onSetFilter();
+    } else if (state === 3) {
+      this.props.onSelectListing();
+    }
+  },
+
+  getSlideState() {
+    if (this.props.selectedListing) {
+      return 3;
+    }
+    if (this.props.filterKey) {
+      return 2;
+    }
+    return 1;
   },
 
   render() {
+    var slide = this.getSlideState();
+
     return <div className="omnibox">
 
       {this.canGoBack() &&
         <div className="omnibox__head omnibox__head--back" onClick={this.goBack}>
-          Back to All Projects
+          Back to {slide === 3 ? 'Projects' : 'Overview'}
         </div>
       }
 
@@ -52,11 +75,13 @@ var Omnibox = React.createClass({
       }
 
       <div className="omnibox__body">
-        <div className={'omnibox__slider omnibox__slider--' + (this.props.selectedListing ? '2' : '1')}>
+        <div className={'omnibox__slider omnibox__slider--' + slide}>
 
-          {/*<div className="omnibox__slider__slide">
-            welcome!
-          </div>*/}
+          <div className="omnibox__slider__slide">
+            <OmniboxOverview
+              stats={this.props.stats}
+              onSetFilter={this.props.onSetFilter} />
+          </div>
 
           <div className="omnibox__slider__slide">
             <OmniboxListings

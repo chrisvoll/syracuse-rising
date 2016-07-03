@@ -1,5 +1,6 @@
 import React from 'react';
 import listingEnum from '../helpers/listingEnum';
+import util from '../util';
 
 var OmniboxListing = React.createClass({
   propTypes: {
@@ -11,21 +12,6 @@ var OmniboxListing = React.createClass({
 
   shouldComponentUpdate(prevProps) {
     return false;
-    return prevProps.hoveredListing === this.props.listing.get('id') || this.props.hoveredListing === this.props.listing.get('id');
-  },
-
-  formatCost(cost) {
-    if (!cost) return null;
-
-    var dollars = parseInt(cost.replace(/,/g, ''), 10);
-
-    if (dollars >= 1000000) {
-      dollars = (dollars / 1000000) + 'm';
-    } else if (dollars >= 1000) {
-      dollars = (dollars / 1000) + 'k';
-    }
-
-    return (dollars ? '$' : '') + dollars;
   },
 
   handleHover() {
@@ -58,7 +44,7 @@ var OmniboxListing = React.createClass({
         </div>
 
         <div className="omnibox__listing__cost">
-          {this.formatCost(listing.get('cost'))}
+          {util.shortenCost(listing.get('cost'))}
         </div>
       </div>
 

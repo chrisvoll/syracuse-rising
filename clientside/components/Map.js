@@ -80,21 +80,20 @@ var Map = React.createClass({
   },
 
   costBucket(cost) {
-    var dollars = parseInt(cost.replace(/,/g, ''), 10);
     var mil = 1000000;
-    if (dollars < 1 * mil) {
+    if (cost < 1 * mil) {
       return 'radius-4';
-    } else if (dollars < 5 * mil) {
+    } else if (cost < 5 * mil) {
       return 'radius-5';
-    } else if (dollars < 10 * mil || !cost) {
+    } else if (cost < 10 * mil || !cost) {
       return 'radius-6';
-    } else if (dollars < 30 * mil) {
+    } else if (cost < 30 * mil) {
       return 'radius-7';
-    } else if (dollars < 50 * mil) {
+    } else if (cost < 50 * mil) {
       return 'radius-8';
-    } else if (dollars < 90 * mil) {
+    } else if (cost < 90 * mil) {
       return 'radius-9';
-    } else if (dollars < 150 * mil) {
+    } else if (cost < 150 * mil) {
       return 'radius-10';
     }
 
